@@ -15,6 +15,15 @@ const ll INF = 1e18L + 1;
 
 int main()
 {
-
+  ll x, y;
+  cin >> x >> y;
+  int ans = 1;
+  while (x < y)
+  {
+    x <<= 1;
+    if (x <= y)
+      ans++;
+  }
+  std::cout << ans << std::endl;
   return 0;
 }
