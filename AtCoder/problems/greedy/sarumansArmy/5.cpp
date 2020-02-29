@@ -13,20 +13,6 @@ typedef map<string, int> msi;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 
-int sum(vi &nums)
-{
-  int s = 0;
-  rep(i, nums.size()) s += nums[i];
-  return s;
-}
-
-int helper(vi &nums)
-{
-  if (nums.size() == 1)
-    return nums[0];
-  return helper(vector<int>(nums.begin() + 1, nums.end())) + nums[0] + sum(nums);
-}
-
 int main()
 {
   int n;
@@ -40,6 +26,15 @@ int main()
   }
   sort(a.begin(), a.end());
 
-  cout << helper(a) << endl;
+  ll ans = 0;
+  rep(i, n) ans += a[i];
+  rep(i, n)
+  {
+    int product = a[i] * (i + 1);
+    ans += product;
+  }
+  ans -= a[a.size() - 1];
+  cout << ans << endl;
+
   return 0;
 }
