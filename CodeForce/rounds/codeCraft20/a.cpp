@@ -19,17 +19,21 @@ int main()
   cin >> t;
   rep(_, t)
   {
-    int n;
-    cin >> n;
-    vi a(n);
-    vi b(n);
-    rep(i, n) cin >> a[i];
-    rep(i, n) cin >> b[i];
-    vi ans(n);
-    rep(i, n) rep(j, n) rep(k, n)
+    int n, m;
+    cin >> n >> m;
+    vi score(n);
+    rep(i, n)
     {
-      if ()
+      cin >> score[i];
     }
+    ll sum = 0;
+    for (int i = 1; i < n; i++)
+      sum += score[i];
+    int up = sum;
+    int ans = score[0] + up;
+    ans = min(ans, m);
+    cout
+        << ans << endl;
   }
   return 0;
 }
