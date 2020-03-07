@@ -18,7 +18,11 @@ int main()
   ll n, a, b;
   cin >> n >> a >> b;
   ll sum = a + b;
-  ll ans = n % sum + a;
+  ll ans = min(n % sum, a);
+  if (n > a)
+  {
+    ans += a * ((n / sum));
+  }
   cout << ans << endl;
   return 0;
 }
