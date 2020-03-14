@@ -15,13 +15,22 @@ const ll INF = 1e18L + 1;
 
 int main()
 {
-  ll a, b, c;
-  cin >> a >> b >> c;
-  ll right = c - a - b;
-  ll left = 4 * a * b;
-  bool ok = false;
-  if (left < right * right && right >= 0)
-    ok = true;
-  puts(ok ? "Yes" : "No");
+  int t;
+  cin >> t;
+  rep(_, t)
+  {
+    int n;
+    cin >> n;
+    // vi a(n, 0);
+    // cin >> a[i];
+    si s;
+    rep(i, n)
+    {
+      int x;
+      cin >> x;
+      s.insert(x);
+    }
+    cout << s.size() << endl;
+  }
   return 0;
 }
