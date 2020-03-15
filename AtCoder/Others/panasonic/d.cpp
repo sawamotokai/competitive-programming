@@ -18,37 +18,21 @@ int n;
 void dfs(string s, char mx)
 {
   if (s.length() == n)
+  {
+    cout << s << endl;
+    return;
+  }
+  for (char c = 'a'; c <= mx + 1; c++)
+  {
+    string t = s;
+    t += c;
+    dfs(t, max(mx, c));
+  }
 }
 
 int main()
 {
   cin >> n;
-  // string base = "";
-  // rep(i, n) base += 'a' + i;
-  // set<string> s;
-  // for (int i = (1<<n)-1; i >= 0; i--)
-  // {
-  //   string str = base;
-  //   // for (int j = 0; j < n; j++)
-  //   int firstOne;
-  //   for (int j = n-1; j >= 0; j--)
-  //   {
-  //     if (1 & (i >> j)) {
-  //       firstOne = (n-j)-1;break;
-  //     }
-  //   }
-  //   for (int j = n-1; j >= 0; j--)
-  //   {
-  //     if (1 & (i >> j))
-  //     {
-  //       str[n-j-1] = base[firstOne];
-  //     }
-  //   }
-  //   // cout << str << endl;
-  //   s.insert(str);
-  // }
-  // for (auto it=s.begin(); it!=s.end(); it++)
-  //   cout << *it <<endl;
-
+  dfs("", 'a' - 1);
   return 0;
 }
