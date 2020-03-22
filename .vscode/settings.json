@@ -34,6 +34,7 @@
     "complex": "cpp",
     "*.tcc": "cpp",
     "codecvt": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "queue": "cpp"
   }
 }

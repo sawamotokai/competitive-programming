@@ -15,31 +15,29 @@ typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 
+bool pali(string s)
+{
+  int l = 0, h = s.length() - 1;
+  while (l < h)
+  {
+    if (s[l] != s[h])
+      return false;
+    l++;
+    h--;
+  }
+  return true;
+}
+
 int main()
 {
-  int t;
-  cin >> t;
-  rep(_, t)
-  {
-    int n, b;
-    cin >> n >> b;
-    minq pq;
-    rep(i, n)
-    {
-      int a;
-      cin >> a;
-      pq.push(a);
-    }
-    int ans = 0;
-    int house = 0;
-    while (b >= 0 && house < n)
-    {
-      b -= pq.top();
-      pq.pop();
-      if (b >= 0)
-        ans++;
-    }
-    cout << "Case #" << _ + 1 << ": " << ans << endl;
-  }
+  string s;
+  cin >> s;
+  int n = s.length();
+  bool ok = true;
+  string a = s.substr(0, (n - 1) / 2);
+  string b = s.substr(((n + 3) / 2) - 1);
+  if (!pali(s) || !pali(a) || !pali(b))
+    ok = false;
+  puts(ok ? "Yes" : "No");
   return 0;
 }

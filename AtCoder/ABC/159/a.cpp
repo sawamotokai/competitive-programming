@@ -17,29 +17,13 @@ const ll INF = 1e18L + 1;
 
 int main()
 {
-  int t;
-  cin >> t;
-  rep(_, t)
-  {
-    int n, b;
-    cin >> n >> b;
-    minq pq;
-    rep(i, n)
-    {
-      int a;
-      cin >> a;
-      pq.push(a);
-    }
-    int ans = 0;
-    int house = 0;
-    while (b >= 0 && house < n)
-    {
-      b -= pq.top();
-      pq.pop();
-      if (b >= 0)
-        ans++;
-    }
-    cout << "Case #" << _ + 1 << ": " << ans << endl;
-  }
+  int n, m;
+  cin >> n >> m;
+  int ans = 0;
+  if (n > 1)
+    ans += (n * (n - 1) / 2);
+  if (m > 1)
+    ans += (m * (m - 1) / 2);
+  cout << ans << endl;
   return 0;
 }

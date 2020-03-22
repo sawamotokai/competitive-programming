@@ -10,10 +10,10 @@ typedef vector<bool> vb;
 typedef vector<vb> vvb;
 typedef set<int> si;
 typedef map<string, int> msi;
-typedef greater<int> gt;
-typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
+
+int ans = 0;
 
 int main()
 {
@@ -21,25 +21,10 @@ int main()
   cin >> t;
   rep(_, t)
   {
-    int n, b;
-    cin >> n >> b;
-    minq pq;
-    rep(i, n)
-    {
-      int a;
-      cin >> a;
-      pq.push(a);
+    int N, K, P;
+    cin >> N >> K >> P;
+    vvi plates(N, vi(K, 0));
+    rep(i, N) rep(j, K) cin >> plates[i][j];
     }
-    int ans = 0;
-    int house = 0;
-    while (b >= 0 && house < n)
-    {
-      b -= pq.top();
-      pq.pop();
-      if (b >= 0)
-        ans++;
-    }
-    cout << "Case #" << _ + 1 << ": " << ans << endl;
-  }
   return 0;
 }
