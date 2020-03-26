@@ -18,36 +18,33 @@ const ll INF = 1e18L + 1;
 int n, k;
 set<string> st;
 
-void dfs(string s, int bcount, int len)
-{
-  if (len == n)
-  {
-    if (bcount == 2)
-      // cout << s << endl;
-      st.insert(s);
-    return;
-  }
-  if (bcount < 2)
-  {
-    dfs(s + 'b', 1 + bcount, 1 + len);
-    dfs(s + 'a', bcount, len + 1);
-  }
-  else
-  {
-    s.append(n - len, 'a');
-    st.insert(s);
-  }
-}
+// void dfs(string s, int bcount, int len)
+// {
+//   if (len == n)
+//   {
+//     if (bcount == 2)
+//       // cout << s << endl;
+//       st.insert(s);
+//     return;
+//   }
+//   if (bcount < 2)
+//   {
+//     dfs(s + 'b', 1 + bcount, 1 + len);
+//     dfs(s + 'a', bcount, len + 1);
+//   }
+//   else
+//   {
+//     s.append(n - len, 'a');
+//     st.insert(s);
+//   }
+// }
 
 void solve()
 {
   st.clear();
   cin >> n >> k;
   string s;
-  dfs(s + 'b', 1, 1);
-  dfs(s + 'a', 0, 1);
-  auto ans = st.begin();
-  rep(_, k - 1) ans++;
+
   cout << *ans << endl;
 }
 
