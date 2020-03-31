@@ -45,10 +45,24 @@ int main()
   }
   sort(apples.begin(), apples.end(), comp);
   int c1 = 0, c2 = 0;
+  ll ans = 0;
   rep(i, a + b + c)
   {
     ii apple = apples[i];
-    if (apple.second == 1)
+    if (apple.second == 1 && c1 < x)
+    {
+      ans += apple.first;
+      c1++;
+    }
+    else if (apple.second == 2 && c2 < y)
+    {
+      ans += apple.first;
+      c2++;
+    }
+    else if (apple.second == 3)
+    {
+      if (c1 <　)
+    }
   }
   return 0;
 }

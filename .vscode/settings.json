@@ -35,6 +35,7 @@
     "*.tcc": "cpp",
     "codecvt": "cpp",
     "stack": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "functional": "cpp"
   }
 }

@@ -19,30 +19,9 @@ int n, x, y;
 
 int main()
 {
-  cin >> n >> x >> y;
-  for (int k = 1; k < n; k++)
-  {
-    int ans = 0;
-    int farthermost = 1e9;
-    vb used(n, false);
-    for (int i = 1; i < n; i++)
-    {
-      for (int j = 0; j < k; j++)
-      {
-        if (!used[i + 1])
-        {
-          ans++;
-          farthermost = i + 1;
-          used[i + 1] = true;
-        }
-        if (i == x && !used[y])
-        {
-          ans++;
-          used[y] = true;
-        }
-      }
-    }
-    cout << ans << endl;
+  cin >> n >> x >> y; x--;y--;s
+  rep(i,n) {
+
   }
   return 0;
 }
