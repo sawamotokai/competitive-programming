@@ -36,6 +36,10 @@
     "codecvt": "cpp",
     "stack": "cpp",
     "queue": "cpp",
-    "functional": "cpp"
+    "functional": "cpp",
+    "map": "cpp",
+    "set": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp"
   }
 }
