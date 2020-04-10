@@ -18,6 +18,8 @@ const ll INF = 1e18L + 1;
 int main() {
   ll N,K;
   cin>>N>>K;
-  cout << min(N, ((K-N)%K +K)%K) << endl;
+  ll a = N%K;
+  cout << min(a, K-a) << endl;
+  // cout << min(N, ((K-N)%K +K)%K) << endl;
   return 0;
 }

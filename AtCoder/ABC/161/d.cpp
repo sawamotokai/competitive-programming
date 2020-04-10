@@ -18,17 +18,25 @@ const ll INF = 1e18L + 1;
 
 int dp[100005][2];
 int main() {
-  int ans =0;
   int K; cin>>K;
-  for (int i=0; i<K; i++) {
-    int dig=i%10;
-    i/=10;
-    for (int j=1; j<floor(log10(i))+1; j++) {
-      int nextDig = i%10;
-      i/=10;
-      if (abs(dig-nextDig) == 1) ans++;
+  vector<ll> ans;
+  queue<ll> q; 
+  for(int i=1; i<10; i++) q.push(i);
+  while (ans.size() <= K) {
+    ll a = q.front(); q.pop();
+    ans.push_back(a);
+    int first = a%10;
+    if (first-1>=0) {
+      ll target=a*10+first-1;
+      q.push(target);
+    }
+    q.push(a*10+first);
+
+    if (first+1<10) {
+      ll target=a*10+1+first;
+      q.push(target);
     }
   }
-  cout << ans << endl;
+  cout << ans[K-1] << endl;
   return 0;
 }
