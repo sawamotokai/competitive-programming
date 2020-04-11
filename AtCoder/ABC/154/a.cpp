@@ -16,25 +16,13 @@ typedef long long ll;
 const ll INF = 1e18L + 1;
 
 int main() {
-  int K; cin>>K;
-  vector<ll> ans;
-  queue<ll> q; 
-  for(int i=1; i<10; i++) q.push(i);
-  while (ans.size() <= K) {
-    ll a = q.front(); q.pop();
-    ans.push_back(a);
-    int first = a%10;
-    if (first-1>=0) {
-      ll target=a*10+first-1;
-      q.push(target);
-    }
-    q.push(a*10+first);
-
-    if (first+1<10) {
-      ll target=a*10+1+first;
-      q.push(target);
-    }
-  }
-  cout << ans[K-1] << endl;
+  string  s,t, u;
+  int a,b; 
+  cin>>s>>t;
+  cin>>a>>b;
+  cin >>u;
+  if (u==s) a--;
+  else b--;
+  printf("%d %d\n", a,b);
   return 0;
 }

@@ -15,26 +15,26 @@ typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 
+  
 int main() {
-  int K; cin>>K;
-  vector<ll> ans;
-  queue<ll> q; 
-  for(int i=1; i<10; i++) q.push(i);
-  while (ans.size() <= K) {
-    ll a = q.front(); q.pop();
-    ans.push_back(a);
-    int first = a%10;
-    if (first-1>=0) {
-      ll target=a*10+first-1;
-      q.push(target);
-    }
-    q.push(a*10+first);
-
-    if (first+1<10) {
-      ll target=a*10+1+first;
-      q.push(target);
-    }
+  int N,K;
+  cin>>N>>K;
+  vector<double> P;
+  rep(i,N) {
+    double p; cin>>p;
+    double prob = (p+1)/2;
+    P.push_back(prob);
   }
-  cout << ans[K-1] << endl;
+  // sort(P.begin(), P.end(), [](double a, double  b) {return a>b;});
+  double ans = 0;
+  rep(i,K) ans+=P[i];
+  double sum = ans;
+
+  for (int i=0; i<N-K; i++) {
+    sum-=P[i];
+    sum+=P[K+i];
+    ans = max(ans, sum);
+  }
+  printf("%.10f\n", ans);
   return 0;
 }
