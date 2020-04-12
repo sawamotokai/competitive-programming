@@ -18,12 +18,6 @@ ll gcd(ll a, ll b) { return b?gcd(b, a%b):a; } // a <= b
 ll lcm(ll a, ll b) { return a/gcd(a,b)*b; }
 //clang++ -std=c++11 -stdlib=libc++ 
 
-ll twoToThe(int n) {
-  if (n==0) return 1;
-  if (n&1) return (int) (2 * pow(twoToThe(n/2),2))% (int) (1e9+7);
-  return (int) pow(twoToThe(n/2),2) % (int) (1e9+7);
-}
-
 const int mod = 1000000007;
 // const int mod = 998244353;
 struct mint {
@@ -56,28 +50,24 @@ struct mint {
   mint operator/(const mint a) const { return mint(*this) /= a;}
 };
 
+mint choose(int n, int a) {
+  mint x =1, y=1;
+  rep(i,a) {
+    y*=i+1;
+    x*=n-i;
+  }
+  return x/y;
+}
 
 int main() {
-  ll n, a, b;
+  int n, a, b;
   cin >> n >> a >> b;
-  ll all = twoToThe(n);
-  ll x,y; x = y = 1;
-  ll x_denom=1, y_denom=1; 
-  rep(i, a) {
-    x *= n-i;
-    x %= mod;
-    x_denom *= (i+1);
-  }
-  rep(i, b) {
-    y *= n-i;
-    y %= mod;
-    y_denom *= i+1;
-  }
-  x *= modinv(x_denom, mod);
-  y *= modinv(y_denom, mod);
-  all -= (1+x+y);
-  all%=mod;
-  if (all <0) all += mod;
-  cout << all << endl;
+  mint ans=2;
+  ans = ans.pow(n);
+  ans -= 1;
+  ans -= choose(n,a);
+  ans -= choose(n,b);
+
+  cout << ans.x << endl;
   return 0;
-}
+} 
