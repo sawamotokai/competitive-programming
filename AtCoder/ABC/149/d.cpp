@@ -21,7 +21,7 @@ int main() {
   int r,s,p; cin >>r>>s>>p;
   string T; cin >>T;
   ll score = 0;
-
+  
   map<int, int> mp;
   mp['r'] = 1e9;
   mp['s'] = 1e9;
