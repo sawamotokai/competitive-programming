@@ -25,6 +25,6 @@ int main() {
     ll right = gcd(left, k);
     sum+=right;
   }
-cout << sum << endl;
+  cout << sum << endl;
   return 0;
 }

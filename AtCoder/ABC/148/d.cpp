@@ -16,23 +16,21 @@ typedef long long ll;
 const ll INF = 1e18L + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
+
 int main() {
-  int N,K; cin >>N>>K;
-  int r,s,p; cin >>r>>s>>p;
-  string T; cin >>T;
-  ll ans = 0;
-  vector<string> groups(K, "");
-  rep(i, N) {
-    groups[i%K] += T[i];
-  }
-  rep(i,K) {
-    for(int j=0; j<groups[i].length(); j++) {
-      if (groups[i][j] == 'r') ans += p;
-      if (groups[i][j] == 'p') ans += s;
-      if (groups[i][j] == 's') ans += r;
-      if (j+1 < groups[i].length() && groups[i][j] == groups[i][j+1]) j++;
+  int n; cin>>n;
+  vi a(n);
+  rep(i,n) cin>>a[i];
+  int ans=0;
+  int num=1;
+  rep(i,n) {
+    if(a[i]==num) {
+      num++;
+    } else {
+      ans++;
     }
   }
+  if (ans==n) ans=-1;
   cout << ans << endl;
   return 0;
 }

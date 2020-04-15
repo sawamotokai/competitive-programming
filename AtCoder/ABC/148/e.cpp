@@ -15,24 +15,17 @@ typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
+ll N;
+ll five(int expo) {
+  if (N<pow(5,expo)*2) return 0;
+  return five(expo+1) + N/((ll)pow(5,expo)*2);
+}
 
 int main() {
-  int N,K; cin >>N>>K;
-  int r,s,p; cin >>r>>s>>p;
-  string T; cin >>T;
-  ll ans = 0;
-  vector<string> groups(K, "");
-  rep(i, N) {
-    groups[i%K] += T[i];
+  cin >> N; 
+  if (N&1) {
+    cout << 0 << endl; return 0;
   }
-  rep(i,K) {
-    for(int j=0; j<groups[i].length(); j++) {
-      if (groups[i][j] == 'r') ans += p;
-      if (groups[i][j] == 'p') ans += s;
-      if (groups[i][j] == 's') ans += r;
-      if (j+1 < groups[i].length() && groups[i][j] == groups[i][j+1]) j++;
-    }
-  }
-  cout << ans << endl;
+  printf("%lld\n", five(1));
   return 0;
 }

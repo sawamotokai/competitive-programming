@@ -15,24 +15,10 @@ typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
-
+ll gcd(ll a, ll b) { return b?gcd(b,a%b):a;}
+ll lcm(ll a, ll b) { return a/gcd(a,b)*b;}
 int main() {
-  int N,K; cin >>N>>K;
-  int r,s,p; cin >>r>>s>>p;
-  string T; cin >>T;
-  ll ans = 0;
-  vector<string> groups(K, "");
-  rep(i, N) {
-    groups[i%K] += T[i];
-  }
-  rep(i,K) {
-    for(int j=0; j<groups[i].length(); j++) {
-      if (groups[i][j] == 'r') ans += p;
-      if (groups[i][j] == 'p') ans += s;
-      if (groups[i][j] == 's') ans += r;
-      if (j+1 < groups[i].length() && groups[i][j] == groups[i][j+1]) j++;
-    }
-  }
-  cout << ans << endl;
+  int a,b; cin>>a>>b;
+  cout << lcm(a,b) << endl;
   return 0;
 }

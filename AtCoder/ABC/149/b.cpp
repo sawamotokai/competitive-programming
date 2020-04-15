@@ -23,7 +23,8 @@ int main() {
     printf("%lld %lld\n", A, B);
     return 0;
   } else {
-    B -= max(0,(K-A));
+    B -= (K-A);
+    if (B<0) B =0;
     A=0;
   }
   printf("%lld %lld\n", A, B);
