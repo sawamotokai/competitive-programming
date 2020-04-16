@@ -41,5 +41,8 @@
     "set": "cpp",
     "unordered_map": "cpp",
     "unordered_set": "cpp"
+  },
+  "code-runner.executorMap": {
+    "cpp": "clang++ -std=c++11 -stdlib=libc++ $fullFileName && ./a.out"
   }
 }
