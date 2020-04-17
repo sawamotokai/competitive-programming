@@ -20,23 +20,22 @@ double dist_sum;
 int N; 
 vii coords;
 
-void dfs(int prev, int m) {
-  if (m==N) {
-    
-   return ; 
-  }
-  rep(i, N) {
-    if (!used[i]) {
-      ii prevCity = coords[m];
-      ii currCity = coords[i];
-      double dist = sqrt(pow(prevCity.first-currCity.first,2) + pow(prevCity.second-currCity.second, 2));
-      dist_sum+=dist;
-      used[i] = true;
-      dfs(i, m+1);
-      used[i] = false;
-    }
-  }
-}
+// void dfs(int prev, int m) {
+//   if (m==N) {
+//    return ; 
+//   }
+//   rep(i, N) {
+//     if (!used[i]) {
+//       ii prevCity = coords[prev];
+//       ii currCity = coords[i];
+//       double dist = sqrt(pow(prevCity.first-currCity.first,2) + pow(prevCity.second-currCity.second, 2));
+//       dist_sum+=dist;
+//       used[i] = true;
+//       dfs(i, m+1);
+//       used[i] = false;
+//     }
+//   }
+// }
 
 int main() {
   cin>>N;
@@ -46,17 +45,28 @@ int main() {
     coords[i]= ii(x,y);
   }
 
-  rep(i,N) {
-    used[i]=true;
-    dfs(i, 1);
-    used[i]=false;
-  }
+  // rep(i,N) {
+  //   assert(used[i]==false);
+  //   used[i]=true;
+  //   dfs(i, 1);
+  //   used[i]=false;
+  // }
+  ll x = 2;
+  rep(i,N-1) x*=(i+1);
 
+  auto dist = [](ii a, ii b) {
+    double dx = a.first-b.first, dy = a.second - b.second;
+    return sqrt(dx*dx + dy*dy);
+  };
+  double sum = 0; 
+  rep(i,N) {
+    for (int j=i+1; j<N; j++) {
+      sum += dist(coords[i], coords[j]);
+    }
+  }
   ll denom = 1;
   rep(i,N) denom*=(i+1);
-  double ans = dist_sum / denom; 
-
-  cout << ans << endl;
-
+  double ans = sum*x / (double) denom; 
+  printf("%.10f\n",ans);
   return 0;
 }
