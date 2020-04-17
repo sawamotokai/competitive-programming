@@ -1,0 +1,1 @@
+      double q = left/(double)B;
