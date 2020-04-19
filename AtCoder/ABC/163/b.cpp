@@ -17,30 +17,17 @@ typedef long long ll;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
-var foo = "method(" + argument1 + "," + argument2  +  ")";
-ll square(ll n) {
-  if (n==0) return 1;
-  ll ret = square(n/2);
-    ret *= ret;
-  if (n&1) ret *= 2;
-  return ret;
-}
 
 int main() {
-
-ll c,d; cin >>c>>d;
-ll upper = d, lower = c;
-int n = ;
-while (1) {
-    ll sq = square(n);
-    ll l = 140 * sq;
-    if (c<=l && d>l) lower = l;
-    ll u = 170 * sq;
-    if (c<=u && d>u) upper = u;
-    if (sq*140 >= d || sq*170>=d) break;
-    n++;
+  ll N,M; cin >> N>>M;
+  vi a(M);
+  ll sum = 0;
+  rep(i,M) {
+    cin >> a[i];
+    sum += a[i];
   }
-  ll ans = abs(upper - lower);
-  printf("%lld\n",ans);
+  ll ans = N-sum;
+  if (ans<0) ans = -1;
+  printf("%lld\n", ans);
   return 0;
 }
