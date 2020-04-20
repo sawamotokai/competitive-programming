@@ -19,34 +19,26 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 int main() {
-  int N; cin>>N;
-  vi A(N);
+  ll N; cin>>N;
+  vector<ll> A(N);
   rep(i,N) cin >> A[i];
-  vi ord(A);
-  sort(ord.begin(), ord.end(), [](int a, int b) {return a>b;});
-  int left = 0, right=N-1;
-  ll ans =0;
-  rep(i, ord.size()) {
-    bool pending = false;
-    rep(j, N) {
-      if (A[j] == ord[i]) {
-        if ((j-left) == (right -j)) {
-          ans += (j-left) * A[j];
-          pending = true;
-          continue;
-        }
-        if ((j-left) > (right-j)) {
-          if (pending) right--;
-          ans += (j-left)*A[j];
-          left++;
-        } else {
-          if (pending) left++;
-          ans += (right-j) * A[j];
-          right--;
-        }
+  vector<pair<ll,ll>> ord(N);
+  rep(i,N) ord[i] = pair<ll,ll>(i, A[i]);
+  sort(ord.begin(), ord.end(), [](pair<ll,ll> a, pair<ll,ll> b) {return a.second>b.second;});
+  vector<vector<ll>> dp(N+1, vector<ll>(N+1,0)); // total when there's l babies on the left and r on the right
+
+  ll ans = 0;
+  rep(l, N) {
+    rep(r,N) {
+      if (l+r==N) {
+        ans = max(ans, dp[l][r]);
+        break;
       }
+      ll idx = l+r;
+      dp[l+1][r] = max(dp[l+1][r], dp[l][r]+ord[idx].second*abs(ord[idx].first-l));
+      dp[l][1+r] = max(dp[l][r+1], dp[l][r]+ord[idx].second*abs((N-1-r) - ord[idx].first));
     }
   }
-  printf("%lld\n", ans);
+ printf("%lld\n", ans);
   return 0;
 }
