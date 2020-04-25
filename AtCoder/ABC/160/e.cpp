@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#define rep(i, n) for (int i = 0; i < (n); ++i)
+#define rep(i,n) for (int i = 0; i < (n); ++i)
+#define ok() puts(ok?"Yes":"No");
 using namespace std;
 typedef long long ll;
 typedef vector<int> vi;
@@ -13,56 +14,44 @@ typedef map<string, int> msi;
 typedef greater<int> gt;
 typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
-const ll INF = 1e18L + 1;
+typedef pair<ll,ll> pll;
+const ll LINF = 1e18L + 1;
+const int INF = 1e9 + 1;
+//clang++ -std=c++11 -stdlib=libc++ 
 
-bool comp(ii a, ii b)
-{
-  return a.first > b.first;
-}
-
-int main()
-{
-  int x, y, a, b, c;
-  cin >> x >> y >> a >> b >> c;
-  vii apples;
-  rep(i, a)
-  {
-    int x;
-    cin >> x;
-    apples.push_back(make_pair(x, 1));
+int main() {
+  int X,Y,A,B,C; cin >>X>>Y>>A>>B>>C;
+  vii apples(A+B+C);
+  rep(i,A) {
+    int a; cin >> a;
+    apples.push_back(ii(a,0));   
+  }rep(i,B) {
+    int a; cin >> a;
+    apples.push_back(ii(a,1));   
   }
-  rep(i, b)
-  {
-    int x;
-    cin >> x;
-    apples.push_back(make_pair(x, 2));
+  rep(i,C) {
+    int a; cin >> a;
+    apples.push_back(ii(a,2));   
   }
-  rep(i, a)
-  {
-    int x;
-    cin >> x;
-    apples.push_back(make_pair(x, 3));
-  }
-  sort(apples.begin(), apples.end(), comp);
-  int c1 = 0, c2 = 0;
+  
+  sort(apples.begin(), apples.end(), [](ii x, ii y) {return x.first > y.first;});
+  int a=0,b=0,c=0, total=0;
   ll ans = 0;
-  rep(i, a + b + c)
-  {
+  rep(i, A+B+C) {
     ii apple = apples[i];
-    if (apple.second == 1 && c1 < x)
-    {
-      ans += apple.first;
-      c1++;
-    }
-    else if (apple.second == 2 && c2 < y)
-    {
-      ans += apple.first;
-      c2++;
-    }
-    else if (apple.second == 3)
-    {
-      if (c1 <　)
+    int color = apple.second;
+    if (color==0 && a<X && total < X+Y) {
+      a++;
+      total++;
+      ans+=apple.first;
+    } else if (color == 1 && b<Y && total < X+Y) {
+      b++; total++;
+      ans+=apple.first;
+    } else if (color == 2 && total < X+Y) {
+      total++;
+      ans+=apple.first;
     }
   }
+  cout << ans << endl;
   return 0;
 }
