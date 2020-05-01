@@ -20,68 +20,74 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 
-int N,M,S;
-int visited[55];
-vector<pll> stations;
+int N,M; ll S;
+ll MAX_S = 2505;
 struct edge {
   int to;
   ll cost, t;
+  edge(int to, ll cost, ll t):to(to), cost(cost), t(t) {}
 };
 
-vector<vector<edge>> g;
-vector<ll> ans;
-
-void dfs(int from, int goal, ll time, int bestStation, int pocket) {
-  if (from == goal) {
-    ans[goal] = min(ans[goal], time);
-    return; 
+struct Data {
+  int v; ll s;
+  ll x;
+  Data(int v, ll s, ll x): v(v), s(s), x(x) {}
+  bool operator<(const Data& a) const {
+    return  x > a.x;
   }
-  rep(i, g[from].size()) {
-    edge nextEdge = g[from][i];
-    int next = g[from][i].to;
-    if (visited[next]==2) continue;
-    double b4 = stations[bestStation].first / stations[bestStation].second;
-    double st = stations[from].first / stations[from].second;
-    if (st > b4) {
-      bestStation = from;
-    }
-    ll time_ = time;
-    int pocket_ = pocket;
-    if (pocket_<nextEdge.cost) {
-      int coinNeeded = nextEdge.cost-pocket_;
-      int extraTime = (coinNeeded / stations[bestStation].first + 1) * stations[bestStation].second;
-      time_+=extraTime;
-      pocket_+=(coinNeeded / stations[bestStation].first + 1) * stations[bestStation].first;
-    }
-    pocket_-=nextEdge.cost;
-    time_+=nextEdge.t;
-    
-    visited[next]++;
-    dfs(next, goal, time_, bestStation, pocket_);
-    visited[next]--; 
-  }
-
-}
+};
 
 int main() {  
   cin >> N>>M>>S;
-  stations.resize(N+1);
-  ans.resize(N, LINF);
-  g.resize(N+1, vector<edge>());
+  vector<ll> c(N);
+  vector<ll> d(N);
+  vector<vector<edge>> g(N, vector<edge>());
   rep(i,M) {
     int u,v; ll a,b; cin>>u>>v>>a>>b;
     u--;v--;
-    g[u].push_back(edge{v,a,b});
-    g[v].push_back(edge{u,a,b});
+    g[u].emplace_back(v,a,b);
+    g[v].emplace_back(u,a,b);
+          // g[u].push_back(edge{v,a,b});
+          // g[v].push_back(edge{u,a,b});
   } 
+  
   rep(i, N) {
-    ll c,d; cin>>c>>d;
-    stations[i] = pll(c,d);
+    cin >> c[i] >> d[i];
   }
-  visited[0] = 1;
-  rep(i,N-1) {
-    dfs(0, i+1, 0, 0, S);
+  S = min(S, MAX_S);
+  priority_queue<Data> q;
+  vector<vector<ll>> dp(N, vector<ll>(MAX_S+5, LINF));
+  auto push = [&] (int v, ll s, ll x) {
+    if (s<0) return;
+    // if (s>MAX_S) return ;
+    if (dp[v][s] <= x) return ;
+    dp[v][s] = x;
+    // Data foo = Data(v,s,x);
+    // q.push(Data{v,s,x});
+    q.emplace(v,s,x);
+    // q.push(foo);
+  };
+  push(0,S,0);
+  while(q.size()) {
+    Data foo = q.top(); q.pop();
+    int v = foo.v;
+    S=foo.s;
+    ll x = foo.x;
+    if (dp[v][S] != x) continue;
+    ll ns =  min(S+c[v], MAX_S);
+    push(v, ns , x+d[v]);
+    rep(i, g[v].size()) {
+      edge e = g[v][i];
+      int nv = e.to;
+      push(nv, S-e.cost, x+e.t);
+    }
   }
-  rep(i, N-1) cout << ans[i+1] << endl;
+  for (int i=1; i<dp.size();i++) {
+    ll ans = LINF;
+    rep(j, dp[i].size()) {
+      ans = min(ans, dp[i][j]);
+    }
+    cout << ans << endl;
+  }
   return 0;
 }
