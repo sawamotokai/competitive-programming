@@ -20,17 +20,23 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 int main() {
-  int n; cin >> n;
-  vi a(n);
-  rep(i,n) cin >> a[i];
-  map<int, int> mp;
-  ll ans =0;
-  rep(i,n) {
-    int dif = i-a[i];
-    int sum = i+a[i];
-    ans += mp[dif];
-    mp[sum]++;
+  int t; cin >>t ;
+  rep(_,t) {
+    int n; cin >> n;
+    vb a(n);
+    bool ok = true;
+    rep(i,n) {
+      int x; cin >> x;
+      a[i] = x;
+      if (x<0) x+= n * (-x/n +1);
+      cout << x % n << endl;
+      x %= n;
+      x+=i;
+      if (x>n) ok = false;
+      else if (a[x]) ok = false;
+      else a[x] = true;
+    }
+    ok();
   }
-  cout << ans << endl;
   return 0;
 }

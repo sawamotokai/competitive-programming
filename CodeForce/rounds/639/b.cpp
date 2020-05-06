@@ -20,17 +20,12 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 int main() {
-  int n; cin >> n;
-  vi a(n);
-  rep(i,n) cin >> a[i];
-  map<int, int> mp;
-  ll ans =0;
-  rep(i,n) {
-    int dif = i-a[i];
-    int sum = i+a[i];
-    ans += mp[dif];
-    mp[sum]++;
+  int t; cin >> t;
+  rep(_, t) {
+    int row, col; cin >> row>>col;
+    bool ok = false;
+    if (row == 1 || col == 1 || (row == col && row==2)) ok = true;
+    ok();
   }
-  cout << ans << endl;
   return 0;
 }

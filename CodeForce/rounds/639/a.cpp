@@ -17,20 +17,35 @@ typedef long long ll;
 typedef pair<ll,ll> pll;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-//clang++ -std=c++11 -stdlib=libc++ 
+//clang++ -std=c++11 -stdlib=libc++
+
+vector<ll> mem(100000, INF);
+ll f(int h)
+{
+  if (h == 1)
+    mem[h] = 2;
+  if (mem[h] == INF)
+  {
+    mem[h] = 3 * h - 1 + f(h - 1);
+  }
+  return mem[h];
+}
 
 int main() {
-  int n; cin >> n;
-  vi a(n);
-  rep(i,n) cin >> a[i];
-  map<int, int> mp;
-  ll ans =0;
-  rep(i,n) {
-    int dif = i-a[i];
-    int sum = i+a[i];
-    ans += mp[dif];
-    mp[sum]++;
+  int t; cin >> t;
+  rep(i, 100000) {
+    f(i);
   }
-  cout << ans << endl;
+  rep(_, t) {
+    int n; cin >> n;
+    int ans = 0;
+    for (int i=min(n, 100000-1); i>0; i--) {
+      if (mem[i] > n) continue;
+      ans++;
+      n -= mem[i];
+    }     
+
+    cout << ans << endl;
+  }
   return 0;
 }
