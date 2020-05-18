@@ -19,37 +19,37 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-
-// BFS but find dist st we can get to V in mod 3 moves.
-
-vi to[100005];
-
 int main() {
-  int N, M; cin >>N>>M;
-  rep(i,M) {
-    int u, v; cin >> u>> v;
-    u--; v--;
-    to[u].push_back(v);
+  int n,m; cin >> n >>m;
+  vvi to(n, vi());
+  rep(i,m) {
+    int a,b; cin >> a >> b;
+    a--; b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
   }
-  int S, T; cin >> S>>T;
-  S--;T--;
-  vvi dist(N, vi(3, INF));
-  dist[S][0] = 0;
-  queue<ii> q;
-  q.push({S, 0});
-  while (q.size()) {
-    int v = q.front().first; 
-    int l = q.front().second; q.pop();
-    int nl = (l+1)%3;
+  vi from(n, INF);
+  queue<int> q;
+  q.push(0);
+  while(q.size()) {
+    int v = q.front(); q.pop();
     for (int u: to[v]) {
-      if (dist[u][nl] != INF) continue;
-      dist[u][nl] = dist[v][l] + 1;
-      q.push({u, nl});
+      if (u==v) continue;
+      if (from[u] == INF) {
+        from[u] = v;
+        q.push(u);
+      }
     }
   }
-  int ans = dist[T][0];
-  if (ans == INF) ans = -1;
-  else  ans /= 3; 
-  cout << ans << endl;
+  for (int i=1; i<n; i++) {
+    if (from[i] == INF) {
+      cout << "No" << endl;
+      return 0;
+    }
+  }
+  cout << "Yes" << endl;
+  for (int i=1; i<n; i++) {
+    cout << from[i] + 1 << endl;
+  }
   return 0;
 }
