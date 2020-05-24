@@ -18,23 +18,26 @@ typedef pair<ll,ll> pll;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
-int dp[100005][100005];
+int mod = 1e9+7;
+ll dp[100005][2];
 int main() {
   string s; cin >> s;
   int n = s.length();
-  dp[0][0] = 1;
+  dp[0][1] = 1;
   rep(i,n) {
-    rep(j,2) {
+    // trasition from less than
+    (dp[i+1][0] += (dp[i][0]*3)%mod)%=mod;
+    // transition from equal
       if (s[i] == '1') {
         // a + b = 0
-        {
-          dp[i+1][0] = (dp[i][0] + dp[i][1]) % mod;
-        }
+        (dp[i+1][0] += dp[i][1]) %= mod; 
         // a + b = 1
-        dp[i+1][0] = dp[i][0]*2 % mod;
-        dp[i+1][1] =
+        (dp[i+1][1] += (dp[i][1] * 2) % mod) %= mod;
+      } else {
+        // a + b = 0
+        (dp[i+1][1] += dp[i][1]) %= mod;
       }
-    }
   }
+  cout << (dp[n][0]+dp[n][1]) % mod << endl;
   return 0;
 }
