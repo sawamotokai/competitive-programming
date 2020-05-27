@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for (int i = 0; i < (n); ++i)
+#define ok() puts(ok?"Yes":"No");
+using namespace std;
+typedef long long ll;
+typedef vector<int> vi;
+typedef pair<int, int> ii;
+typedef vector<vi> vvi;
+typedef vector<ii> vii;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef set<int> si;
+typedef map<string, int> msi;
+typedef greater<int> gt;
+typedef priority_queue<int, vector<int>, gt> minq;
+typedef long long ll;
+typedef pair<ll,ll> pll;
+const ll LINF = 1e18L + 1;
+const int INF = 1e9 + 1;
+//clang++ -std=c++11 -stdlib=libc++ 
+
+int main() {
+  int n; cin >> n;
+  vector<pair<string, int>> rest(n);
+  map<int, int> mp;
+  rep(i,n) {
+    string s; int p;
+    cin >> s >> p;
+    rest[i] = make_pair(s,p);
+    mp[p] = i;
+  }
+  sort(rest.begin(), rest.end(), [] (pair<string, int> a, pair<string, int> b) {
+    if (a.first == b.first) return a.second > b.second;
+    return a.first < b.first;
+  });
+  rep(i,n) {
+    cout << mp[rest[i].second] + 1 << endl;
+  }
+  return 0;
+}
