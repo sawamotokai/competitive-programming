@@ -20,10 +20,27 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 int main() {
-  long long a; long double b; cin >> a >> b;
-  long long b2 = b*100+0.5;
-  long long ans2 = a*b2;
-  ans2 /= 100;
-  printf("%lld\n", ans2);
+  int n,m; cin >> n >> m;
+  vii jobs(n);
+
+  rep(i,n) {
+
+    int a,b; cin >> a >> b;
+    jobs[i] = ii(a,b);
+  }
+  sort(jobs.begin(), jobs.end(), [](ii a, ii b) {return a.first < b.first;});
+
+  priority_queue<int> candidates;
+  int idx = 0;
+  ll money = 0;
+  for (int day = 1; day <= m; day++) {
+    while (idx < n && jobs[idx].first <= day) {
+      candidates.push(jobs[idx++].second);
+    }
+    if (candidates.size()) {
+      money += candidates.top(); candidates.pop(); 
+    }
+  }
+  cout << money << endl;
   return 0;
 }
