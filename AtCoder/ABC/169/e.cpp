@@ -31,17 +31,15 @@ int main() {
     int target = n/2;
     sort(p.begin(), p.end(), [](ii a, ii b) {return a.first < b.first;});
     int left = p[target].first;
-    sort(p.begin(), p.end(), [](ii a, ii b) {return a.second > b.second;});
+    sort(p.begin(), p.end(), [](ii a, ii b) {return a.second < b.second;});
     int right = p[target].second; 
     ans = right-left+1;
   } else {
-    int target = (n-2)/2;
     sort(p.begin(), p.end(), [](ii a, ii b) {return a.first < b.first;});
-    int left = p[target].first;
-    sort(p.begin(), p.end(), [](ii a, ii b) {return a.second > b.second;});
-    int right = p[target].second; 
-    ll dif = right - left + 1;
-    ans = dif*(dif-1)/2;
+    int left = p[n/2].first + p[n/2-1].first;
+    sort(p.begin(), p.end(), [](ii a, ii b) {return a.second < b.second;});
+    int right = p[n/2].second + p[n/2-1].second;
+    ans = right - left + 1;
   }
   cout << ans << endl;
   return 0;
