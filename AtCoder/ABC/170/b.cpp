@@ -15,29 +15,11 @@ const int INF = 1e9 + 1;
 
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int dp[3005][6005];
-int dp2[3005][6005];
-
-void takeMax(int &a, int &b) {
-  a = max(a, b);
-}
-
 int main() {
-  int n,t; cin >> n >> t;
-  vi a(n), b(n);
-  rep(i,n) cin >> a[i] >> b[i];
-
-  rep(i,n) {
-    rep(j, t+3001) {
-      if (j-a[i] >= t) continue;
-      if (j-a[i] >= 0 ) dp[i+1][j] = max(dp[i][j], dp[i][j-a[i]] + b[i]);
-      else dp[i+1][j] = dp[i][j];
-    }
-  }
-  int ans = 0;
-  rep(i, t+3001) {
-    ans = max(ans, dp[n][i]);
-  }
-  cout << ans << endl;
+  int x, y; cin >>x>>y;
+  bool ok = true;
+  int foo = 4*x - y;
+  if (foo < 0 ||  foo&1 || foo>x*2) ok = false;
+  ok();
   return 0;
 }
