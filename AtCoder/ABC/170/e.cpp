@@ -17,12 +17,47 @@ const int INF = 1e9 + 1;
 
 int main() {
   int n,q; cin >> n >> q;
-  vector<priority_queue<int>> kins(200001);
-  rep(i,n) {
-    int a, b; cin >> a >> b;
-    b--;
-    kins[b].push(a);
-  }
+  vi a(n), b(n);
+  vector<multiset<int>> s(200005);
+  multiset<int> maxs;
+
   
+  auto getMax = [&] (int i) {
+    if (s[i].size() == 0) return -1;
+    return *(s[i].rbegin());
+  };
+  auto delMax = [&](int i) {
+    int x = getMax(i);
+    if (x==-1) return;
+    maxs.erase(maxs.find(x));
+  };
+  auto addMax = [&](int i) {
+    int x = getMax(i);
+    if (x == -1) return;
+    maxs.insert(x);
+  };
+  auto add = [&](int i, int x) {
+    delMax(i);
+    s[i].insert(x);
+    addMax(i);
+  };
+  auto del = [&](int i, int x) {
+    delMax(i);
+    s[i].erase(s[i].find(x));
+    addMax(i);
+  };
+  rep(i,n) {
+    cin >> a[i] >> b[i];
+    add(b[i], a[i]);
+  }
+  rep(_,q)  {
+    int c,d; cin >> c >> d;
+    c--;
+    del(b[c], a[c]);
+    b[c] = d;
+    add(d, a[c]);
+    int ans = *(maxs.begin());
+    printf("%d\n", ans);
+  }
   return 0;
 }
