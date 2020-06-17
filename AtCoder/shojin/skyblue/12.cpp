@@ -12,31 +12,27 @@ using minq = priority_queue<int, vector<int>, gt>;
 using P = pair<ll,ll>;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-
+#define chmax(x,y) x = max(x,y)
+#define chmin(x,y) x = min(x,y)
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int dp[3005][6005];
-int dp2[3005][6005];
+int dp[3005][3005];
 
-void takeMax(int &a, int &b) {
-  a = max(a, b);
-}
 
 int main() {
   int n,t; cin >> n >> t;
-  vi a(n), b(n);
-  rep(i,n) cin >> a[i] >> b[i];
-
+  vii p(n);
+  rep(i,n) cin >> p[i].first >> p[i].second;
+  sort(p.begin(), p.end());
+  int ans =0;
   rep(i,n) {
-    rep(j, t+3001) {
-      if (j-a[i] >= t) continue;
-      if (j-a[i] >= 0 ) dp[i+1][j] = max(dp[i][j], dp[i][j-a[i]] + b[i]);
-      else dp[i+1][j] = dp[i][j];
+    rep(j, t) {
+      chmax(dp[i+1][j], dp[i][j]);
+      int nj = j + p[i].first;
+      if (nj < t) dp[i+1][nj] = max(dp[i+1][nj], dp[i][j] + p[i].second);
     }
-  }
-  int ans = 0;
-  rep(i, t+3001) {
-    ans = max(ans, dp[n][i]);
+    int now = dp[i][t-1] + p[i].second;
+    chmax(ans, now);
   }
   cout << ans << endl;
   return 0;
