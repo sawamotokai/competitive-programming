@@ -15,17 +15,19 @@ typedef priority_queue<int, vector<int>, gt> minq;
 typedef long long ll;
 const ll INF = 1e18L + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
-ll N;
-ll five(int expo) {
-  if (N<pow(5,expo)*2) return 0;
-  return five(expo+1) + N/((ll)pow(5,expo)*2);
-}
 
 int main() {
+  ll N;
   cin >> N; 
   if (N&1) {
     cout << 0 << endl; return 0;
   }
-  printf("%lld\n", five(1));
+  N /= 2;
+  ll ans = 0;
+  while (N >= 5) {
+    ans += N/5;
+    N /= 5;
+  }
+  printf("%lld\n", ans);
   return 0;
 }
