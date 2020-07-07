@@ -24,10 +24,10 @@ int main() {
   rep(i,n)cin>>a[i];
   int bits = 45;
   memset(dp, -1, sizeof(dp));
-  dp[bits][0] = 0;
+  dp[bits][1] = 0;
   for (int i=bits-1; i>=0; --i) {
-    // num of 1's of a[j][i] for j <- 0..n-1
-    int cnt = 0;
+   // num of 1's of a[j][i] for j <- 0..n-1
+    ll cnt = 0;
     rep(l, n) if ((a[l] >> i) & 1) cnt++;
     // If you make a 0, it increses by # of 1's * keta; if you make a 1 # of 0's
     // 0->0
@@ -47,6 +47,6 @@ int main() {
     }
   }
   ll ans = max(dp[0][0], dp[0][1]);
-  cout << ans << endl;
+  printf("%lld\n", ans);
   return 0;
 }
