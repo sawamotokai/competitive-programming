@@ -25,7 +25,6 @@ int main() {
   vll sum(n+1);
   rep(i, n) (sum[1+i] = a[i] + sum[i]) %= m;
   
-  
   ll ans = 0;
   map<int, int> mp;
   for (int i=0; i<=n; i++) {
