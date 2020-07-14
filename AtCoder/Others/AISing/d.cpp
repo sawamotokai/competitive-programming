@@ -18,32 +18,42 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
+int popcnt(int n) {
+  return __builtin_popcount(n);
+}
+
+int f(int n) {
+  if (n==0) return 0;
+  return 1 + f(n % popcnt(n));
+}
+
 int main() {
   int n; string x; cin >> n >> x;
-  // find f(n)
-  int fn = 0;
-  int res = 0;
-  do {
-    int popcount = 0;
-    rep(i,n) if (x[i] == '1') popcount++;
+  // find x mod pc;
+  int pc=0;
+  rep(i,n) if(x[i] == '1') pc++;
+  vi ans(n);
+  rep(b, 2) {
+    int npc = pc;
+    if (b==0) npc++;
+    else npc--;
+    if (npc <= 0) continue;
+    int num = 0;
     rep(i, n) {
-      res = (res*2 + (int)x[i] - '0') % popcount; 
+      num = (num << 1) %npc;
+      num += x[i] - '0';
     }
-    int now = res;
-    string x = "";
-    while (now > 0) {
-      string add = "0";
-      if (now&1) {
-        add = "1"; 
+    int k = 1;
+    for (int i=n-1; i>=0; --i) {
+      if (x[i] - '0' == b) {
+        int nx = num;
+        if (b == 0) nx = (nx + k) % npc;
+        else nx = (nx - k + npc) % npc;
+        ans[i] = f(nx) + 1;
       }
-      now >>= 1;
-      x += add;
+      k = (k << 1) % npc;
     }
-    reverse(x.begin(), x.end());
-    fn++;
-  } while (res != 0);
-
-  cout << fn << endl;
-
+  }
+  rep(i,n) cout << ans[i] << endl;
   return 0;
 }
