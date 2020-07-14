@@ -32,34 +32,26 @@ int main() {
     vector<bool> used(d, false);
     int score = 0;
     int num = 0;
+    int maxUsable = -1;
     rep(j, d) {
       if ((1<<j) & i) {
         used[j] = true;
         score += p[j] * 100 * (j+1);
         score += c[j];
         num += p[j];
+      } else {
+        chmax(maxUsable, j);
       }
     }    
-    int j=d-1;
-    while (j>=0 && score < g) {
-      if (used[j]) {
-        j--;
-        continue;
-      }
+    if (score < g) {
       int want = g-score;
-      // int z = (want-1) / ((j+1)*100) + 1;
-      int z = ceil(want/(double)(j+1)*100);
-      if (z >= p[j]) {
-        score += (j+1) * 100 * p[j];
-        score += c[j]; 
+      int z = ceil(want/(double)((maxUsable+1)*100));
+      if (z >= p[maxUsable]) {
+        continue;
       } else {
-        score += (j+1) * 100 * z;
+        score += (maxUsable+1) * 100 * z;
       }
-      num += min(p[i], z);
-      j--;
-    }
-    if (num == 5) {
-      cout << i << " " << score << endl;
+      num += z;
     }
     chmin(ans, num);
   }
