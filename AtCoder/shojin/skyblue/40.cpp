@@ -30,13 +30,15 @@ int main() {
   int dir = 0;
   int cnt = 0;
   bool firstMove = s[0] == 'F';
+  while (firstMove) {
+    cnt++;
+    if (cnt == n) break;
+    firstMove = s[cnt] == 'F';
+  }
+  dpX[0][origin+ cnt] = true;
+  cnt = 0;
   rep(i, n) {
     if (s[i] == 'T') {
-      if (firstMove) {
-        dpX[0][origin + cnt] = true;
-        firstMove = false;
-        cnt = 0;
-      }
       dir ^= 1;
       if (cnt) {
         if (dir) moveY.push_back(cnt);
@@ -48,10 +50,10 @@ int main() {
   }
   dpX[0][n] = dpY[0][n] = true;
   for (int i=0; i<moveX.size(); i++) {
-    rep(j, mx+1) {
+    rep(j, mx+2) {
       if (dpX[i][j]) {
         dpX[i+1][j] = true;
-        if (j+moveX[i] <= n)dpX[i+1][j+moveX[i]] = true;
+        if (j+moveX[i] <= mx)dpX[i+1][j+moveX[i]] = true;
         if (j-moveX[i] >= 0) dpX[i+1][j-moveX[i]] = true;
       }
     }
@@ -60,7 +62,7 @@ int main() {
     rep(j, mx+1) {
       if (dpY[i][j]) {
         dpY[i+1][j] = true;
-        if (j+moveY[i] <= n)dpY[i+1][j+moveY[i]] = true;
+        if (j+moveY[i] <= mx)dpY[i+1][j+moveY[i]] = true;
         if (j-moveY[i] >= 0) dpY[i+1][j-moveY[i]] = true;
       }
     }
