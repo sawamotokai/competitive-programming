@@ -19,18 +19,24 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 
-// int dp[305][305];
+// abc74d
 int main() {
   int n; cin >> n;
   vvi a(n, vi(n));
   rep(i,n) rep(j,n) cin >> a[i][j];
-  // fill(dp, sizeof(dp), INF):
   vector<vll> dp(n, vll(n, INF));
   rep(i, n) rep(j, n) {
     dp[i][j] = a[i][j];
   }
   rep(k, n) rep(i, n) rep(j, n) chmin(dp[i][j], dp[i][k] + dp[k][j]);
-  rep(i,n) rep(j, n) {
+
+  // rep(i, n){
+      // rep(j, n) {
+        // cout << dp[i][j] << " ";
+      // }
+    // cout << endl;
+  // }
+  rep(i, n) rep(j, n) {
     if (i==j) continue;
     if (dp[i][j] < a[i][j]) {
       cout << -1 << endl;
@@ -39,19 +45,24 @@ int main() {
   }
   ll ans = 0;
   rep(i, n) rep(j, n) ans+=a[i][j];
-  ans /=2;
   rep(i,n) {
     rep(j, n) {
+      if (i==j )continue;
       int path = a[i][j];
       rep(k,n) {
+        if (k==i || k==j) continue;
         ll detour = dp[i][k] + dp[k][j];
         if (detour == path) {
-          ans -= path; 
+          ans -= path;
           break;
+        } if (detour < path) {
+          cout << -1 << endl;
+          return 0;
         }
       }
     }
   }
+  ans /=2;
   printf("%lld\n",ans);
   return 0;
 }
