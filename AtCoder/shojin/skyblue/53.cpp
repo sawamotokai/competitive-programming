@@ -18,28 +18,24 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-
 int main() {
-  int n; cin >> n;
+  int n,k;
+  cin >> n >> k;
   vi a(n);
-  rep(i,n ) cin >> a[i];
-  ll stock = 0;
-  ll money = 1000;
-  ll ans = 1000;
-  rep(i,n-1) {
-    if (a[i] < a[i+1])  {
-      ll maxBuy = money / a[i];
-      stock += maxBuy;
-      money -= maxBuy * a[i];
-    } 
-    if (a[i] > a[i+1]) {
-      money += stock * a[i];
-      stock = 0;
-      chmax(ans, money);
-    }
+  rep(i, n) cin >> a[i];
+  vi b(n);
+  int maxProfit = 0;
+  int mnSoFar = a[0];
+  for (int i=1; i<n; i++) {
+    int profit = a[i] - mnSoFar;
+    b[i] = profit;
+    chmin(mnSoFar, a[i]);
+    chmax(maxProfit, profit);
   }
-  money += stock * a[n-1];
-  chmax(ans, money);
-  printf("%lld\n", ans);
+  int ans = 0;
+  rep(i, n) {
+    if (b[i] == maxProfit) ans++;
+  }
+  cout << ans << endl;
   return 0;
 }

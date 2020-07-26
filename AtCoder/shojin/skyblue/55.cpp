@@ -18,28 +18,15 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-
 int main() {
-  int n; cin >> n;
-  vi a(n);
-  rep(i,n ) cin >> a[i];
-  ll stock = 0;
-  ll money = 1000;
-  ll ans = 1000;
-  rep(i,n-1) {
-    if (a[i] < a[i+1])  {
-      ll maxBuy = money / a[i];
-      stock += maxBuy;
-      money -= maxBuy * a[i];
-    } 
-    if (a[i] > a[i+1]) {
-      money += stock * a[i];
-      stock = 0;
-      chmax(ans, money);
-    }
+  double p; cin >> p;
+  if (p<1.5) {
+    printf("%.10f\n", p);
+    return 0;
   }
-  money += stock * a[n-1];
-  chmax(ans, money);
-  printf("%lld\n", ans);
+  double x = log2(p*log(2)) - log2(1.5);
+  if (x < 0) x = 0;
+  double ans = p * pow(0.5, x) + 1.5 * x;
+  printf("%.10f\n", ans);
   return 0;
 }
