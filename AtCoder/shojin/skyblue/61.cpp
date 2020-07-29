@@ -41,14 +41,19 @@ int main() {
   rep(i,n) {
     int win = 0, lose = 0, tie = 0;
     int id = a[i].second;
+    int eq = 0;
     if (cnt_mp[a[i].first] != 1) {
       int h = hand[a[i].second];
       win += (h==0)?dp[a[i].first][1]:(h==1)?dp[a[i].first][2]:dp[a[i].first][0];
       lose += (h==0)?dp[a[i].first][2]:(h==1)?dp[a[i].first][0]:dp[a[i].first][1];     
       tie += (h==0)?dp[a[i].first][0]:(h==1)?dp[a[i].first][1]:dp[a[i].first][2];     
       tie--;
+      eq++;
     } else {
-      gt += cnt_mp[prev];
+      gt += eq;
+      cout << eq << endl;
+      eq=0;
+      // gt += cnt_mp[prev];
     }
     int lt = n - gt - cnt_mp[a[i].first];
     lose += gt;
