@@ -18,51 +18,39 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int dp[100005][3];
 int main() {
-  int n; cin >> n;
-  vi hand(n);
-  vi cnt_mp(n);
-  vii a(n);
-  rep(i,n) {
-    a[i].second = i;
-    cin >>  a[i].first;
-    int h; cin >> h;
-    h--;
-    hand[i] = h;
-    dp[a[i].first][h]++;
+  int N; cin >> N;
+  vi R(N), H(N);
+  rep(i,N) {
+    cin >> R[i] >> H[i];
+    H[i]--;
   }
-  sort(a.rbegin(), a.rend());
-  rep(i,n) cnt_mp[a[i].first]++;
-  int prev = 0;
-  int gt = 0;
-
-  vvi ans(n, vi(3));
-  rep(i,n) {
-    int win = 0, lose = 0, tie = 0;
-    int id = a[i].second;
-    int eq = 0;
-    if (cnt_mp[a[i].first] != 1) {
-      int h = hand[a[i].second];
-      win += (h==0)?dp[a[i].first][1]:(h==1)?dp[a[i].first][2]:dp[a[i].first][0];
-      lose += (h==0)?dp[a[i].first][2]:(h==1)?dp[a[i].first][0]:dp[a[i].first][1];     
-      tie += (h==0)?dp[a[i].first][0]:(h==1)?dp[a[i].first][1]:dp[a[i].first][2];     
-      tie--;
-      eq++;
-    } else {
-      gt += eq;
-      cout << eq << endl;
-      eq=0;
-      // gt += cnt_mp[prev];
+  vi SR(100005);
+  rep(i,N) SR[R[i]]++;
+  rep(i,100005) SR[i+1] += SR[i];
+  vvi hand(100005, vi(3, 0));
+  rep(i,N) hand[R[i]][H[i]]++;
+  rep(i,N) {
+    int r = R[i], h = H[i];
+    int win = SR[r - 1];
+    int lose = SR[100004] - SR[r];
+    int tie = 0;
+    if (h == 0) {
+      win += hand[r][1]; 
+      lose += hand[r][2];
+      tie += hand[r][0]-1;
+    } 
+    if (h == 1) {
+      win += hand[r][2]; 
+      lose += hand[r][0];
+      tie += hand[r][1]-1;
     }
-    int lt = n - gt - cnt_mp[a[i].first];
-    lose += gt;
-    win += lt;
-    prev = a[i].first;
-    ans[id][0] = win;
-    ans[id][1] = lose;
-    ans[id][2] = tie;
+    if (h == 2) {
+      win += hand[r][0]; 
+      lose += hand[r][1];
+      tie += hand[r][2]-1;
+    }
+    printf("%d %d %d\n", win, lose, tie);
   }
-  rep(i,n) printf("%d %d %d\n", ans[i][0], ans[i][1], ans[i][2]);
   return 0;
 }
