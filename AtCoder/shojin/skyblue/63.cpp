@@ -20,10 +20,61 @@ const int INF = 1e9 + 1;
 
 
 int main() {
+  // input
   int n; cin >> n;
   vi x(n), y(n), c(n);
   rep(i,n) cin >> x[i] >> y[i] >> c[i];
 
-  cout << ans << endl;
+  auto findX = [&](double t) {
+    double lo = -1e9, hi = 1e9;
+    rep(i,n) {
+      double range = t / (double) c[i];
+      double nl = x[i] - range;
+      double nh = x[i] + range;
+      chmin(hi, nh);
+      chmax(lo, nl);
+    }
+    if (lo <= hi) return true;
+    else return false;
+  };
+  auto findY = [&](double t) {
+    double lo = -1e9, hi = 1e9;
+    rep(i,n) {
+      double range = t / (double) c[i];
+      double nl = y[i] - range;
+      double nh = y[i] + range;
+      chmin(hi, nh);
+      chmax(lo, nl);
+    }
+    if (lo <= hi) return true;
+    else return false;
+  };
+  // find min t for x    
+  double minX = 1e9;
+  double hi = 1e9;
+  double lo = -1;
+
+  rep(i,100) {
+    double mid = (hi+lo)/2.0;
+    if (findX(mid)) hi = mid;
+    else lo = mid;
+    minX = mid;
+  }
+  // find min t for y
+
+  double minY = 1e9;
+  hi = 1e9;
+  lo = -1.0;
+
+  rep(i,100) {
+    double mid = (hi+lo)/2.0;
+    if (findY(mid)) hi = mid;
+    else lo = mid;
+    minY = mid;
+  }
+
+  // find grand max
+  double ans = max(minX, minY);
+  printf("%.12f\n", ans);
   return 0;
 }
