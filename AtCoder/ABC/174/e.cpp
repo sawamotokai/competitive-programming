@@ -17,29 +17,30 @@ using P = pair<ll,ll>;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
-// abc34d
+
 int main() {
-  int n,k; cin >> n >> k; 
-  vector<P> bottle(n);
-  rep(i,n) cin >> bottle[i].first >> bottle[i].second;
-
-  auto f = [&](double p) {
-    sort(bottle.begin(), bottle.end(), [&](P a, P b){return a.first * (a.second - p) > b.first * (b.second - p);});
-    double sum = 0;
-    rep(i,k) sum += bottle[i].first*(bottle[i].second - p);
-    return sum >= 0;
-  };
-
+  // bin search
+  int N,K; cin >> N >> K;
+  vll A(N);
+  rep(i,N)cin>>A[i];
+  double hi = 1e9;
+  double lo = 0;
   double ans = 0;
-  double lo = -1;
-  double hi = INF;
-
-  rep(i, 100) {
-    double mid = (lo + hi) / 2.;
-    if (f(mid)) lo = mid;
-    else hi = mid;
+  auto f = [&](double t) {
+    ll cnt = 0;
+    rep(i,N){
+      cnt += ceil(A[i]/t);
+      cnt--;
+    }
+    return cnt <= K;
+  };
+  rep(i,100) {
+    double mid = (hi+lo)/2.;
+    if (f(mid)) hi = mid;
+    else lo = mid;
     ans = mid;
   }
-  printf("%.12f\n", ans);
+  int out = ceil(ans);
+  cout << out << endl;
   return 0;
 }
