@@ -19,44 +19,36 @@ const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
 int N,M;
-// struct edge {
-//   int to;
-//   ll w;
-//   edge(int to, ll w):to(to), w(w){}
-// };
-// struct vertex {
-//   int v;
-//   ll val;
-//   vertex(int v, ll val):v(v), val(val){}
-//   bool operator<(const vertex rhs) {
-//     return this->val > rhs.val;
-//   }
-// };
-
-// vector<edge> g[100005];
+vi to[100006];
 int main() {
   cin >> N >> M;
-  vvi dist1(N, vi(N, INF));
+  vvi dist(N, vi(N, INF));
   vvi dist2(N, vi(N, INF));
-  rep(i,N) dist1[i][i] = dist2[i][i] = 0;
+  rep(i,N) dist[i][i]=0;
   rep(i,M) {
     int a,b,c; cin >> a >> b >> c; a--; b--;
-    dist1[a][b] = c;
-    dist2[b][a] = c;
+    to[a].push_back(b);
+    to[b].push_back(a);
+    if (a == 0 || b == 0) {
+      dist2[a][b] = c;
+      dist2[b][a] = c;
+      continue;
+    }
+    dist[a][b] = c;
+    dist[b][a] = c;
+
   }
   rep(k,N) rep(i,N) rep(j,N) {
-    chmin(dist1[i][j], dist1[i][k] + dist1[k][j]);
-    chmin(dist2[i][j], dist2[i][k] + dist2[k][j]);
+    chmin(dist[i][j], dist[i][k] + dist[k][j]);
   }
   int ans = INF;
-  rep(i,N) {
-    if (i == 0) continue;
-    chmin(ans, dist1[0][i] + dist2[0][i]);
+  for (int v: to[0]) {
+    for (int u: to[0]) {
+      if (v==u) continue;
+      chmin(ans, dist[v][u] + dist2[0][v] + dist2[0][u]);
+    }
   }
-  rep(i,N) {
-    rep(j,N)cout<<dist1[i][j] << " ";
-    cout << endl;
-  }
+  if (ans == INF) ans = -1;
   cout << ans << endl;
   return 0;
 }
