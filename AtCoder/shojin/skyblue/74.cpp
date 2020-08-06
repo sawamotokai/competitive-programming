@@ -18,6 +18,7 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
+// abc20c
 int main() {
   int H,W,T;cin>>H>>W>>T;
   vector<string> grid(H);
@@ -29,8 +30,8 @@ int main() {
     if (grid[i][j] == 'S') sy = i, sx = j;
     if (grid[i][j] == 'G') gy = i, gx = j;
   }
-  auto f = [&](int x) {
-    vvi dist(H, vi(W,INF));
+  auto f = [&](int X) {
+    vector<vll> dist(H, vll(W,INF));
     dist[sy][sx]=0;
     queue<ii> q;
     q.emplace(sy,sx);
@@ -40,17 +41,18 @@ int main() {
       rep(i,4) {
         int nx = dx[i] + x, ny = dy[i] + y;
         if (nx >= W || nx < 0 || ny >= H || ny < 0) continue;
-        int nd = dist[y][x] + ((grid[ny][nx] == '#')?x:1);
+        ll nd = dist[y][x];
+        if (grid[ny][nx] == '#') nd += X;
+        else nd++;
         if (dist[ny][nx] <= nd) continue;
         dist[ny][nx] = nd;
         q.emplace(ny,nx);
       }
     }
-    return T <= dist[gy][gx];
+    return T >= dist[gy][gx];
   };
-  int hi = T;
+  int hi = INF;
   int lo = 0;
-  
   rep(i,100) {
     int mid = (hi+lo) / 2;
     if (f(mid)) lo = mid;
