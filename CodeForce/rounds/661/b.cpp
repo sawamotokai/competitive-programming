@@ -22,16 +22,17 @@ const int INF = 1e9 + 1;
 
 void solve() {
   int n; cin >> n;
-  vi a(n);
+  vll a(n), b(n);
   rep(i,n) cin >> a[i];
-  sort(a.begin(),a.end());
-  rep(i,n-1) {
-    if (a[i+1] - a[i] > 1) {
-      puts("NO");
-      return ;
-    }
+  rep(i,n) cin >> b[i];
+  ll mnA=INF, mnB=INF;
+  rep(i,n) chmin(mnA,a[i]),chmin(mnB,b[i]);
+
+  ll ans = 0;
+  rep(i,n) {
+    ans += max(a[i]-mnA, b[i]-mnB);
   }
-  puts("YES");
+  cout << ans << endl;
 }
 
 int main() {

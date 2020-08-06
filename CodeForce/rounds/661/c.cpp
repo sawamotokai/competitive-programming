@@ -22,16 +22,28 @@ const int INF = 1e9 + 1;
 
 void solve() {
   int n; cin >> n;
-  vi a(n);
-  rep(i,n) cin >> a[i];
-  sort(a.begin(),a.end());
-  rep(i,n-1) {
-    if (a[i+1] - a[i] > 1) {
-      puts("NO");
-      return ;
+  vi w(n);
+  rep(i,n) cin >> w[i];
+  map<int,int> mp;
+  rep(i,n) mp[w[i]]++;
+  int ans = 0;
+  rep(s, 2*n + 1) {
+    map<int, int> mp2 = mp;
+    int num = 0;
+    rep(i,n) {
+      int a = w[i];
+      int b = s-a;
+      if (mp2.find(b) != mp2.end()) {
+        if (mp2[a] == 0 || mp2[b] == 0) continue;
+        if (a == b && mp2[a] == 1) continue;
+        mp2[a]--;
+        mp2[b]--;
+        num++;
+      }
     }
+    chmax(ans, num);
   }
-  puts("YES");
+  cout << ans << endl;
 }
 
 int main() {
