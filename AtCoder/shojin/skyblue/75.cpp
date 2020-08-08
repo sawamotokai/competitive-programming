@@ -18,61 +18,30 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int N,M;
-int A,B;
-vi to[105];
-vi dag[105];
-int ans[105];
-
-int mod = 1e9 + 7;
-
+int N;
+vi to[100005];
 int main() {
-  // input
-  cin >> N >> A >> B >> M;
-  A--, B--;
-  vi dist(N,INF);
-  dist[A] = 0;
-  rep(i,M) {
+  cin >> N;
+  rep(i,N-1) {
   int a,b; cin >> a >> b; a--; b--;
     to[a].push_back(b);
     to[b].push_back(a);
   }
-  // find dist from a
-  auto bfs = [&] {
-    queue<int> q;
-    q.push(A);
-    while(q.size()) {
-      int v = q.front(); q.pop();
-      for (int u: to[v]) {
-        if (dist[u] != INF) continue;
-        dist[u] = dist[v] + 1;
-        q.push(u);
-      }
-    }
-  };
-  bfs();
-  // make shortest path DAG
-  rep(v,N) {
-    for (int u: to[v]) {
-      if (dist[v] + 1 == dist[u]) dag[v].push_back(u);
-    }
-  }
-  // dp
-  vll dp(N);
-  dp[A] = 1;
-  queue<int> q;
-  q.push(A);
+  minq q;
+  q.push(0);
+  vi ans;
   vi visited(N);
-  visited[A] = true;
-  while (q.size()) {
-    int v=q.front();q.pop();
-    for (int u:dag[v]) {
-      (dp[u]+=dp[v])%=mod;
+  visited[0] = 1;
+  while(q.size()) {
+    int v = q.top(); q.pop();
+    ans.push_back(v);
+    for (int u: to[v]) {
       if (visited[u]) continue;
       q.push(u);
-      visited[u] = true;
+      visited[u] = 1;
     }
   }
-  cout << dp[B] << endl;
+  assert(ans.size() == N);
+  rep(i,N) printf("%d%c", ans[i]+1, i==N-1?'\n':' ');
   return 0;
 }
