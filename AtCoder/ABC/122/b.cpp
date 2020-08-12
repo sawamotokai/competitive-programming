@@ -18,34 +18,23 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int N;string S;
-
-
-int LCS(int idx) {
-  string s = S.substr(0, idx);
-  string t = S.substr(idx);
-  int ret = 0;
-  vvi dp(N+1, vi(N+1, 0));
-  rep(i, s.length())rep(j, t.length()){
-    if (s[i] == t[j]) chmax(dp[i+1][j+1], dp[i][j] + 1);
-    else {
-      chmax(dp[i+1][j], dp[i][j]);
-      chmax(dp[i][j+1], dp[i][j]);
-    } 
-  }
-  rep(i,s.length()+1) rep(j,t.length()+1) chmax(ret, dp[i][j]);
-  return ret;
-}
-
+int N,Q;
 int main() {
-  cin >> N >> S;
-  int ans = N;
-  rep(i,N) {
-    int len = LCS(i);
-    int num = N - 2*len;
-    assert(num >= 0 && num <= N);
-    chmin(ans,num);
+  cin >> N >> Q;
+  string S; cin >> S;
+  vi SA(N+1);
+  for (int i=1; i<N; ++i) {
+    if (S[i] == 'C') {
+      if (S[i-1] == 'A') {
+        SA[i+1]++; 
+      }
+    }
+    SA[i+1] += SA[i];
   }
-  cout << ans << endl;
+  rep(i,Q) {
+    int l,r; cin >> l >> r;
+    int ans = SA[r] - SA[l];
+    cout << ans << endl;
+  }
   return 0;
 }
