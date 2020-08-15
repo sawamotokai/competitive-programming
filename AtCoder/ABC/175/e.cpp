@@ -18,31 +18,32 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-// arc34c
-// faster wihtout sieve of erathosthenes
-int A,B;
+int R,C,K;
+ll dp[3005][3005][4];
 int main() {
-  cin >> A>> B;
-  map<ll,int> mp;
-  vector<int> fl;
-  auto factor = [&](int n) {
-    int a = n;
-    for (int i=2; i*i<=n && a > 1; i++) {
-      while (a%i == 0) {
-        fl.push_back(i);
-        a /= i;
-      }
-    }
-    if (a != 1) fl.push_back(a);
-  };
-  for (int i=B+1; i<=A; i++) {
-    factor(i);
+  cin >> R >> C>> K;
+  vector<vll> grid(R,vll(C));
+  rep(i,K) {
+    int r,c,v; cin >> r >> c >> v;
+    r--, c--;
+    grid[r][c] = v;
   }
-  rep(i, fl.size()) mp[fl[i]]++;
-  ll ans = 1;
-  int mod = 1e9+7;
-  for (auto p: mp) {
-    (ans *= (p.second +1)) %= mod;
+  rep(i,R) rep(j,C) {
+    rep(k,4) {
+      // taking 
+      if (k != 3) {
+        chmax(dp[i+1][j][0], dp[i][j][k] + grid[i][j]);
+        chmax(dp[i][j+1][k+1], dp[i][j][k] + grid[i][j]);
+      }
+      // not taking
+      chmax(dp[i+1][j][k], dp[i][j][k]);
+      chmax(dp[i][j+1][k], dp[i][j][k]);
+    }
+  }
+  rep(i,4) if(i!=3) dp[R-1][C-1][i] += grid[R-1][C-1];
+  ll ans = 0;
+  rep(i,4) {
+    chmax(ans, dp[R-1][C-1][i]);
   }
   cout << ans << endl;
   return 0;

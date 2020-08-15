@@ -18,32 +18,21 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-// arc34c
-// faster wihtout sieve of erathosthenes
-int A,B;
+ll X,K,D;
 int main() {
-  cin >> A>> B;
-  map<ll,int> mp;
-  vector<int> fl;
-  auto factor = [&](int n) {
-    int a = n;
-    for (int i=2; i*i<=n && a > 1; i++) {
-      while (a%i == 0) {
-        fl.push_back(i);
-        a /= i;
-      }
-    }
-    if (a != 1) fl.push_back(a);
-  };
-  for (int i=B+1; i<=A; i++) {
-    factor(i);
+  cin >> X>> K >>D;
+  ll move = abs(X/D);
+  chmin(move, K);
+  K -= move;
+  if (K == 0) {
+    ll ans = abs(X) - D*move;
+    printf("%lld\n", ans);
+    return 0;
   }
-  rep(i, fl.size()) mp[fl[i]]++;
-  ll ans = 1;
-  int mod = 1e9+7;
-  for (auto p: mp) {
-    (ans *= (p.second +1)) %= mod;
+  ll now = abs(X) - D*move;
+  if (K&1)  {
+    now = abs(now - D);
   }
-  cout << ans << endl;
+  printf("%lld\n", now);
   return 0;
 }

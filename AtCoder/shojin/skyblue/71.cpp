@@ -26,26 +26,33 @@ int main() {
   rep(i,N) cin >> A[i];
   ll ans = 0;
   int cnt = 0;
-  int start = 0;
+  int r = 0;
+  int l = 0;
   rep(i,N) {
     int a = A[i];
     mp[a]++;
     if (mp[a] == 1) cnt++;
     if (cnt == C) {
-      start = i;
+      r = i;
       break;
     } 
   }
-  int left = 0;
-  for (int i=start+1; i<N;) {
-    do {
-      ans += N - i - 1;
-      mp[A[left]]--;
-    } while (mp[A[left++]] != 0);
-    do {
-      mp[A[i]]++;
-    } while (mp[A[i++]] != 1);
-  } 
+  ans += (N-r);
+  for (; l < N; l++) {
+    mp[A[l]]--;
+    assert(cnt == C);
+    if (mp[A[l]] == 0) {
+      mp.erase(A[l]);
+      cnt--;
+    }
+    while (cnt < C && r < N) {
+      mp[A[r]]++;
+      if (mp[A[r]] == 1) cnt++;
+      r++;
+    }
+    assert(r <= N);
+    ans+=N-r;
+  }
   printf("%lld\n", ans);
   return 0;
 }
