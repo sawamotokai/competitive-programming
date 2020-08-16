@@ -27,45 +27,33 @@ int main() {
     P[i]--;
   }
   rep(i,N) cin >> C[i];
-  ll tot = 0;
-  rep(i,N) tot += C[i];
-  ll loop = K/N;
-  ll rest = K%N;
-  // possiblity 1 : loop many times and go as much as possilbe from all N
-  // possilbity 2 : go as much as possible from all i in N;
-  // 1:
+
   ll ans =-LINF;
-  ll mx = -LINF;
-  rep(i,N) {
-    ll temp = 0;
-    ll localMax = -LINF; 
-    ll v = i;
-    rep(j, rest) {
-      temp += C[P[v]];
-      chmax(localMax, temp);
+  // if sum of loop is positive, go K/sizeofloop loops and go as much as possible in addition
+  // else go as much as possible
+  rep(s,N) {
+    vi score;
+    int v = s;
+    ll tot = 0;
+    while (1) {
       v = P[v];
+      score.push_back(C[v]);
+      tot += C[v];
+      if (v == s) break;
+    } 
+    int len = score.size();
+    ll t = 0;
+    rep(i,len) {
+      if (i+1 > K) break;
+      t += score[i];
+      ll now = t;
+      if (tot > 0) {
+        int rest = (K-i-1)/len;
+        now += rest*tot;
+      }
+      chmax(ans,now);
     }
-    chmax(mx, localMax);
   }
-
-  ll now = tot * loop;
-  if (now > 0) mx += now;
-  chmax(ans , mx);
-
-  //2 :
-  mx = -LINF;
-  rep(i,N) {
-    ll temp = 0;
-    ll localMax = -LINF; 
-    ll v = i;
-    rep(j, min(N,K)) {
-      temp += C[P[v]];
-      chmax(localMax, temp);
-      v = P[v];
-    }
-    chmax(mx, localMax);
-  }
-  chmax(ans , mx);
   printf("%lld\n", ans);
   return 0;
 }
