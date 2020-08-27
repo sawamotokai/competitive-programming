@@ -77,7 +77,8 @@
     "shared_mutex": "cpp",
     "sstream": "cpp",
     "stdexcept": "cpp",
-    "system_error": "cpp"
+    "system_error": "cpp",
+    "__split_buffer": "cpp"
   },
   "code-runner.executorMap": {
     "cpp": "clang++ -std=c++11 -stdlib=libc++ $fullFileName && ./a.out"
