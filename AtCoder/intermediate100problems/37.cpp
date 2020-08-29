@@ -25,36 +25,24 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int H,W;
-string grid[51];
-int dist[51][51];
+int q;
+int dp[1005][1005];
 
-int main() {
-  cin >> H >> W;
-  rep(i,H) cin >> grid[i];
-  int path = INF;
-  int black = 0;
-  rep(i,H)rep(j,W) {
-    if (grid[i][j] == '#') black++;
-    dist[i][j]=INF;    
-  }
-  dist[0][0] = 0;
-  queue<ii> q;
-  q.emplace(0,0);
-  while(q.size()) {
-    auto [i,j] = q.front(); q.pop();
-    int dx[] = {0,1,0,-1};
-    int dy[] = {1,0,-1,0};
-    rep(k,4) {
-      int ni = i+dy[k];
-      int nj = j+dx[k];
-      if (ni < 0 || ni >= H || nj < 0 || nj >= W || dist[ni][nj] != INF || grid[ni][nj] == '#') continue;
-      q.emplace(ni,nj);
-      dist[ni][nj] = dist[i][j] + 1;
+void solve() {
+  memset(dp,0,sizeof(dp));
+  string s,t; cin >> s >> t;
+  int sl = s.length(), tl = t.length();
+  rep(i,sl) {
+    rep(j,tl) {
+      if (s[i] == t[j]) chmax(dp[i+1][j+1], dp[i][j] + 1);
+      chmax(dp[i+1][j+1], max(dp[i+1][j], dp[i][j+1]));
     }
   }
-  int ans = H*W - black - dist[H-1][W-1] - 1;
-  if (dist[H-1][W-1] == INF) ans = -1;
-  cout << ans << endl;
+  cout << dp[sl][tl] << endl;
+}
+
+int main() {
+  cin >> q;
+  while(q--) solve(); 
   return 0;
 }

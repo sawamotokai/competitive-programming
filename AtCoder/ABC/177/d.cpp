@@ -25,36 +25,42 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int H,W;
-string grid[51];
-int dist[51][51];
+int N,M;
+vi to[200006];  
+struct UnionFind {
+  vector<int> d;
+  UnionFind(int n=0): d(n,-1) {}
+  int find(int x) {
+    if (d[x] < 0) return x;
+    return d[x] = find(d[x]);
+  }
+  // bool is useful for MST 
+  bool unite(int x, int y) {
+    x = find(x); y = find(y);
+    if (x == y) return false;
+    if (d[x] > d[y]) swap(x,y);
+    d[x] += d[y];
+    d[y] = x;
+    return true;
+  }
+  
+  bool same(int x, int y) { return find(x) == find(y);}
+  int size(int x) { return -d[find(x)];}
+};
 
 int main() {
-  cin >> H >> W;
-  rep(i,H) cin >> grid[i];
-  int path = INF;
-  int black = 0;
-  rep(i,H)rep(j,W) {
-    if (grid[i][j] == '#') black++;
-    dist[i][j]=INF;    
+  cin >> N >> M;
+  UnionFind uf(N);
+  rep(i,M) {
+  int a,b; cin >> a >> b; a--; b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
+    uf.unite(a,b);
   }
-  dist[0][0] = 0;
-  queue<ii> q;
-  q.emplace(0,0);
-  while(q.size()) {
-    auto [i,j] = q.front(); q.pop();
-    int dx[] = {0,1,0,-1};
-    int dy[] = {1,0,-1,0};
-    rep(k,4) {
-      int ni = i+dy[k];
-      int nj = j+dx[k];
-      if (ni < 0 || ni >= H || nj < 0 || nj >= W || dist[ni][nj] != INF || grid[ni][nj] == '#') continue;
-      q.emplace(ni,nj);
-      dist[ni][nj] = dist[i][j] + 1;
-    }
+  int ans = 0;
+  rep(i,N) {
+    chmax(ans, uf.size(i));
   }
-  int ans = H*W - black - dist[H-1][W-1] - 1;
-  if (dist[H-1][W-1] == INF) ans = -1;
   cout << ans << endl;
-  return 0;
+   return 0;
 }

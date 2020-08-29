@@ -25,36 +25,50 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int H,W;
-string grid[51];
-int dist[51][51];
+struct edge {
+  int from, w;
+  edge(int from, int w):from(from),w(w){};
+};
+
+int V,E;
+int dist[20][20];
+int dp[1<<20][20][20];
+vector<edge> to[24];
+
+int rec(int bits, int v, int p) {
+  if (~dp[bits][v][p]) return dp[bits][v][p];
+  if (bits == 1 << v) return dp[bits][v][p] = 0;
+  int prev = bits & ~(1 << v);
+  int ret = INF;
+  for (edge e: to[v]) {
+    int u = e.from;
+    int w = e.w;
+    // if (u == p) continue;
+    if (!(prev & (1<<u))) continue; // if u is not in prev bits continue
+    chmin(ret, rec(prev, u, p) + w);
+  }
+  return dp[bits][v][p] = ret;
+}
+
 
 int main() {
-  cin >> H >> W;
-  rep(i,H) cin >> grid[i];
-  int path = INF;
-  int black = 0;
-  rep(i,H)rep(j,W) {
-    if (grid[i][j] == '#') black++;
-    dist[i][j]=INF;    
+  cin >> V >> E;
+  rep(i,E) {
+    int a,b,c; cin >> a >> b >> c;
+    to[b].emplace_back(a,c);
   }
-  dist[0][0] = 0;
-  queue<ii> q;
-  q.emplace(0,0);
-  while(q.size()) {
-    auto [i,j] = q.front(); q.pop();
-    int dx[] = {0,1,0,-1};
-    int dy[] = {1,0,-1,0};
-    rep(k,4) {
-      int ni = i+dy[k];
-      int nj = j+dx[k];
-      if (ni < 0 || ni >= H || nj < 0 || nj >= W || dist[ni][nj] != INF || grid[ni][nj] == '#') continue;
-      q.emplace(ni,nj);
-      dist[ni][nj] = dist[i][j] + 1;
+  memset(dp,-1,sizeof(dp));
+  int ans = INF;
+  rep(i,V) rep(j,V) {
+    if (i == j)
+      continue;
+    int now = rec((1 << V) - 1, i, j);
+    for (edge e: to[i]) {
+      if (e.from == j) now += e.w;
     }
+    chmin(ans, now);
   }
-  int ans = H*W - black - dist[H-1][W-1] - 1;
-  if (dist[H-1][W-1] == INF) ans = -1;
+  if (ans == INF) ans = -1;
   cout << ans << endl;
   return 0;
 }

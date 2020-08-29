@@ -25,36 +25,31 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int H,W;
-string grid[51];
-int dist[51][51];
+int N;
+ll A[2005];
+ll dp[2004][2005];
+
+ll rec(int l, int r, int s) {
+  if (dp[l][r] != -1) return dp[l][r];
+  if (l == r) {
+    if (s) return dp[l][r] = 0;
+    return dp[l][r] = A[l];
+  }
+  if (s) {    
+    if (A[l] > A[r]) return dp[l][r] = rec((l+1)%N, r, 0);
+    else return dp[l][r] = rec(l, (r-1+N)%N, 0);
+  }
+  return dp[l][r] = max(rec((l+1)%N, r, 1) + A[l], rec(l, (r-1+N) % N, 1) + A[r]);
+}
 
 int main() {
-  cin >> H >> W;
-  rep(i,H) cin >> grid[i];
-  int path = INF;
-  int black = 0;
-  rep(i,H)rep(j,W) {
-    if (grid[i][j] == '#') black++;
-    dist[i][j]=INF;    
+  cin >> N;
+  rep(i,N) cin >> A[i];
+  memset(dp, -1, sizeof(dp));
+  ll ans = 0;
+  rep(i,N) {
+    chmax(ans, rec((i+1)%N,(i+N-1)%N,1) + A[i]);
   }
-  dist[0][0] = 0;
-  queue<ii> q;
-  q.emplace(0,0);
-  while(q.size()) {
-    auto [i,j] = q.front(); q.pop();
-    int dx[] = {0,1,0,-1};
-    int dy[] = {1,0,-1,0};
-    rep(k,4) {
-      int ni = i+dy[k];
-      int nj = j+dx[k];
-      if (ni < 0 || ni >= H || nj < 0 || nj >= W || dist[ni][nj] != INF || grid[ni][nj] == '#') continue;
-      q.emplace(ni,nj);
-      dist[ni][nj] = dist[i][j] + 1;
-    }
-  }
-  int ans = H*W - black - dist[H-1][W-1] - 1;
-  if (dist[H-1][W-1] == INF) ans = -1;
   cout << ans << endl;
   return 0;
 }
