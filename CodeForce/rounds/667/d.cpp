@@ -25,30 +25,54 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int V,E;
-int dist[20][20];
-int dp[1<<20][20];
-
-
-int main() {
-  cin >> V >> E;
-  rep(i,20) rep(j,20) dist[i][j] = INF;
-  rep(i,E) {
-    int a,b,c; cin >> a >> b >> c;
-    dist[a][b] =c;
+void solve () {
+  string n; int s;
+  int d=0;
+  cin >> n >> s;
+  rep(i,n.size()) d += n[i]-'0';
+  if (d <= s) {
+    cout << 0 << endl;
+    return;
   }
-  rep(i,1<<20) rep(j,20) dp[i][j] = INF;
-  dp[0][0] = 0;
-  rep(bits, 1 << V) {
-      rep(v, V) {
-        if ((bits & (1 << v))) continue; // if from node is already visited
-        rep(u, V) {
-          chmin(dp[bits | (1 << v)][v], dp[bits][u] + dist[u][v]);
-        }
-      }
+  int idx = -1;
+  d = 0;
+  rep(i,n.size()) {
+    d += n[i]-'0';
+    if (d < s) {
+      idx = i;
+    } else break;
   }
-  ll ans = dp[(1<<V)-1][0];
-  if (ans == INF) ans = -1;
+  if (idx == -1) {
+    ll x = 1;
+    ll num = 0;
+    rep(i,n.size()) {
+      x*=10;
+      num *= 10;
+      num += n[i]-'0';
+    }
+    ll ans = x - num;
+    cout << ans << endl;
+    return ;
+  }
+  ll x = 0;
+  rep(i,idx+1) {
+    x *= 10;
+    x += n[i]-'0';
+  }
+  ++x;
+  rep(i,n.size()-idx-1) x*=10;
+  ll num = 0;
+  rep(i,n.size()) {
+    num *= 10;
+    num += n[i]-'0';
+  }
+  ll ans = x-num;
   cout << ans << endl;
+}
+
+int t;
+int main() {
+  cin >> t;
+  rep(i,t) solve();
   return 0;
 }

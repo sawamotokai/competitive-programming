@@ -18,7 +18,7 @@ struct Sieve {
   vector<int> factorList(int x) {
     vector<int> res;
     while (x != 1) {
-      res.push_back(f[x]);
+      if (!res.size() || res.back() != f[x]) res.push_back(f[x]);
       x /= f[x];
     }
     return res;

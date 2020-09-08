@@ -25,30 +25,49 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 //clang++ -std=c++11 -stdlib=libc++ 
 
-int V,E;
-int dist[20][20];
-int dp[1<<20][20];
-
+int n;
+ll dp[1<<3][1005];
+int mod =10007;
 
 int main() {
-  cin >> V >> E;
-  rep(i,20) rep(j,20) dist[i][j] = INF;
-  rep(i,E) {
-    int a,b,c; cin >> a >> b >> c;
-    dist[a][b] =c;
+  cin >> n;
+  string s; cin >> s;
+  if (s[0] == 'J') {
+    dp[4][0] = 1;
+    dp[5][0] = 1;
   }
-  rep(i,1<<20) rep(j,20) dp[i][j] = INF;
-  dp[0][0] = 0;
-  rep(bits, 1 << V) {
-      rep(v, V) {
-        if ((bits & (1 << v))) continue; // if from node is already visited
-        rep(u, V) {
-          chmin(dp[bits | (1 << v)][v], dp[bits][u] + dist[u][v]);
+  if (s[0] == 'O') dp[6][0] = 1;
+  if (s[0] == 'I') dp[5][0] = 1;
+  dp[7][0] = 1;
+    
+  rep2(i,1,n-1) {
+    if (s[i] == 'J') {
+      rep(prev, 8) {
+        rep(now, 8) {
+          if (!(now & (1<<2))) continue;
+          if (prev & now) (dp[now][i] += dp[prev][i-1]) %= mod;
         }
       }
+    }
+    if (s[i] == 'O') {
+      rep(prev, 8) {
+        rep(now, 8) {
+          if (!(now & (1<<1))) continue;
+          if (prev & now) (dp[now][i] += dp[prev][i-1])%=mod;
+        }
+      }
+    }
+    if (s[i] == 'I') {
+      rep(prev, 8) {
+        rep(now, 8) {
+          if (!(now & (1<<0))) continue;
+          if (prev & now) (dp[now][i] += dp[prev][i-1]%=mod);
+        }
+      }
+    }
   }
-  ll ans = dp[(1<<V)-1][0];
-  if (ans == INF) ans = -1;
+  ll ans = 0;
+  rep(i,8) (ans += dp[i][n-1]) %= mod;
   cout << ans << endl;
   return 0;
 }
