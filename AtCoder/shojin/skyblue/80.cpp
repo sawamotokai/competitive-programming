@@ -68,21 +68,35 @@ int N;
 int D[252][252];
 int Q;
 Sieve sieve(250);
+int wa[255][255];
 
 void solve() {
   int p;cin>>p;
   set<int> facs;
+  int ans = 0;
   for (int i=1; i*i<=p; ++i) if (p%i==0) facs.insert(i),facs.insert(p/i);
   for (int h: facs) {
     int w = p/h;
-    
+    chmin(h,N);
+    chmin(w,N);
+    for (int i=0;i+h<=N; ++i) {
+      for (int j=0; j+w<=N; ++j) {
+        int t = wa[i+h][j+w] - wa[i+h][j] - wa[i][j+w] + wa[i][j];
+        chmax(ans,t);
+      }
+    }
   }
+  cout << ans << endl;
 }
 
 int main() {
   cin >> N;
   rep(i,N) rep(j,N) cin >> D[i][j];
+  rep(i,N) rep(j,N) wa[i+1][j+1] = wa[i+1][j]+wa[i][j+1]-wa[i][j]+D[i][j];
   cin >> Q;
   while(Q--) solve();
+  // int a;
+  // while(Q--) cin >> a;
+  // rep(i,N+1) rep(j,N+1) cout << wa[i][j] << endl;
   return 0;
 }
