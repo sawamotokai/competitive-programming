@@ -37,37 +37,31 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, X, M;
+ll dp[200005];
+ll dpsum[200005];
+int mod = 998244353;
 int main() {
-  cin >> N >> X >> M;
-  vi a;
-  vi id(M, -1);
-  int len = 0;
-  ll tot = 0;
-  // if no loop found, it iterates M times
-  // so tot += sum(a[i]...a[N])
-  while (id[X] == -1) {
-    a.pb(X);
-    id[X] = len;
-    len++;
-    tot += X;
-    X = (X * X) % M;
+  int N, K;
+  cin >> N >> K;
+  vi L(N), R(N);
+  rep(i, K) cin >> L[i] >> R[i];
+  dp[1] = 1;
+  dpsum[1] = dp[1];
+  rep2(i, 2, N) {
+    rep(j, K) {
+      int l = i - R[j];
+      int r = i - L[j];
+      if (r < 0)
+        continue;
+      chmax(l, 1);
+      (dp[i] += dpsum[r] - dpsum[l - 1]) %= mod;
+      if (dp[i] < 0)
+        dp[i] += mod;
+    }
+    dpsum[i] = (dpsum[i - 1] + dp[i]) % mod;
+    if (dpsum[i] < 0)
+      dpsum[i] += mod;
   }
-  ll sum = 0;
-  for (int i = id[X]; i < len; ++i) {
-    sum += a[i];
-  }
-  int c = len - id[X];
-  ll ans = 0;
-  if (len < N) {
-    ans += tot;
-    N -= len;
-    ans += sum * (N / c);
-    N %= c;
-    rep(i, N) ans += a[id[X] + i];
-  } else {
-    rep(i, N) ans += a[i];
-  }
-  printf("%lld\n", ans);
+  cout << dp[N] << endl;
   return 0;
 }
