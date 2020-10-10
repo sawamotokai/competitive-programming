@@ -29,8 +29,8 @@ ll a,b,c,d;
 int main() {
   cin >> a >> b >> c >> d;
   ll ans = -LINF;
-  chmax(ans, a*c);
   chmax(ans, a*d);
+  chmax(ans, a*c);
   chmax(ans, b*c);
   chmax(ans, b*d);
   cout << ans << endl;
