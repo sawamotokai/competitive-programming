@@ -38,20 +38,37 @@ const int INF = 1e9 + 1;
 // clang++ -std=c++11 -stdlib=libc++
 
 ll N;
+ll dp[1 << 20][20];
+ll costs[20][20];
+ll coord[10][3]; // x,y,x
+
 int main() {
   cin >> N;
-  vll x(N);
-  rep(i, N) cin >> x[i];
-  ll d1 = 0;
-  ll d2 = 0;
-  ll d3 = 0;
+  rep(i, 20) rep(j, 20) costs[i][j] = INF;
   rep(i, N) {
-    d1 += abs(x[i]);
-    d2 += x[i] * x[i];
-    chmax(d3, abs(x[i]));
+    int a, b, c;
+    cin >> a >> b >> c;
+    coord[i][0] = a;
+    coord[i][1] = b;
+    coord[i][2] = c;
   }
-  printf("%lld\n", d1);
-  printf("%.14f\n", sqrt(d2));
-  printf("%lld\n", d3);
+  rep(i, N) {
+    rep(j, N) {
+      costs[i][j] = abs(coord[i][0] - coord[j][0]) +
+                    abs(coord[i][1] - coord[j][1]) +
+                    max(0ll, coord[j][2] - coord[i][2]);
+    }
+  }
+  rep(i, 1 << 20) rep(j, 20) dp[i][j] = LINF;
+  dp[0][0] = 0;
+  rep(bits, 1 << N) {
+    rep(v, N) {
+      rep(u, N) { chmin(dp[bits | (1 << v)][v], dp[bits][u] + costs[u][v]); }
+    }
+  }
+  ll ans = dp[(1 << N) - 1][0];
+  if (ans == LINF)
+    ans = -1;
+  printf("%lld\n", ans);
   return 0;
 }

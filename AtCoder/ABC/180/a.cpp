@@ -1,16 +1,28 @@
 #include <bits/stdc++.h>
 #include <cassert>
-#define rep(i,n) for (int i = 0; i < (n); ++i)
-#define rep2(i, a, b) for(ll i = a; i <= b; ++i)
-#define rep3(i, a, b) for(ll i = a; i >= b; --i)
+#define rep(i, N) for (int i = 0; i < (N); ++i)
+#define rep2(i, a, b) for (ll i = a; i <= b; ++i)
+#define rep3(i, a, b) for (ll i = a; i >= b; --i)
 #define pb push_back
 #define eb emplace_back
 #define fi first
 #define se second
 #define all(c) begin(c), end(c)
-#define ok() puts(ok?"Yes":"No");
-template<class T> bool chmax(T &a, const T &b) { if(a < b) { a = b; return true; } return false; }
-template<class T> bool chmin(T &a, const T &b) { if(a > b) { a = b; return true; } return false; }
+#define ok() puts(ok ? "Yes" : "No");
+template <class T> bool chmax(T &a, const T &b) {
+  if (a < b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
+template <class T> bool chmin(T &a, const T &b) {
+  if (a > b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
 using namespace std;
 using ll = long long;
 using vi = vector<int>;
@@ -20,29 +32,15 @@ using vvi = vector<vi>;
 using vii = vector<ii>;
 using gt = greater<int>;
 using minq = priority_queue<int, vector<int>, gt>;
-using P = pair<ll,ll>;
+using P = pair<ll, ll>;
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-//clang++ -std=c++11 -stdlib=libc++ 
+// clang++ -std=c++11 -stdlib=libc++
 
-
+int N, A, B;
 int main() {
-  ll N; cin >> N;
-  ll c=1;
-  while (1) {
-    ll d = 1LL + 8*N*c;
-    int sq = sqrt(d);
-    if (sq == sqrt(d)) {
-      if (!(sq&1)) {
-        c++;
-        continue;
-      }
-      ll k = sq - 1;
-      k /= 2;
-      printf("%lld\n", k);
-      return 0;
-    }
-    c++;
-  }
+  cin >> N >> A >> B;
+  int ans = N - A + B;
+  cout << ans << endl;
   return 0;
-} 
+}
