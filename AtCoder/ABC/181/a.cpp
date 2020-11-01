@@ -37,17 +37,12 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
-
 int main() {
-  cin >> N;
-
-  vector<int> A(N);
-  int a = 0;
-  int b = 1;
-
-  rep(i, N) { cin >> A[i]; }
-  cout << "JA" << endl;
-  printf("%d", ans);
+  int n;
+  cin >> n;
+  if (n & 1)
+    puts("Black");
+  else
+    puts("White");
   return 0;
 }
