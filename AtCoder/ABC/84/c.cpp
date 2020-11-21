@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 #include <cassert>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
@@ -38,42 +37,26 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 // clang++ -std=c++11 -stdlib=libc++
 
-ll L[200005];
-ll R[200005];
+int N;
+int C[505];
+int S[505];
+int F[505];
 
 int main() {
-  int N, M;
-  cin >> N >> M;
-  vll H(N), W(M + 1);
-  W[0] = -LINF;
-  W[M] = LINF;
-  rep(i, N) cin >> H[i];
-  rep(i, M) cin >> W[i + 1];
-  sort(all(H));
-  rep2(i, 2, N - 1) {
-    if (i & 1)
-      continue;
-    L[i] = L[i - 2] + H[i - 1] - H[i - 2];
+  cin >> N;
+  rep(i, N - 1) cin >> C[i] >> S[i] >> F[i];
+
+  rep(i, N - 1) {
+    ll t = S[i];
+    rep2(j, i, N - 2) {
+      if (S[j] > t)
+        t = S[j];
+      if ((t + F[j]) % F[j] != 0)
+        t += (F[j] - (t + F[j]) % F[j]);
+      t += C[j];
+    }
+    cout << t << endl;
   }
-  rep3(i, N - 3, 0) {
-    if (i & 1)
-      continue;
-    R[i] = R[i + 2] + H[i + 2] - H[i + 1];
-  }
-  ll ans = LINF;
-  sort(all(W));
-  rep(i, N) {
-    if (i & 1)
-      continue;
-    ll child = H[i];
-    ll now = L[i] + R[i];
-    auto it = lower_bound(all(W), child);
-    int j = it - W.begin();
-    ll c = abs(child - *it);
-    chmin(c, abs(child - *(it - 1)));
-    now += c;
-    chmin(ans, now);
-  }
-  cout << ans << endl;
+  cout << 0 << endl;
   return 0;
 }

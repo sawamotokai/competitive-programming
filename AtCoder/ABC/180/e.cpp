@@ -40,7 +40,7 @@ const int INF = 1e9 + 1;
 ll N;
 ll dp[1 << 20][20];
 ll costs[20][20];
-ll coord[10][3]; // x,y,x
+ll coord[20][3]; // x,y,x
 
 int main() {
   cin >> N;
@@ -60,7 +60,11 @@ int main() {
     }
   }
   rep(i, 1 << 20) rep(j, 20) dp[i][j] = LINF;
-  dp[0][0] = 0;
+  rep(i, N) {
+    if (i == 0)
+      continue;
+    dp[1 << i][i] = costs[0][i];
+  }
   rep(bits, 1 << N) {
     rep(v, N) {
       rep(u, N) { chmin(dp[bits | (1 << v)][v], dp[bits][u] + costs[u][v]); }

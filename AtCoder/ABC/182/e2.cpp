@@ -97,6 +97,7 @@ int main() {
       processed[d][x][3] = 1;
     }
   }
+  rep(i, N) { i++; }
   rep(i, H) rep(j, W) if (used[i][j]) ans++;
   cout << ans << endl;
   return 0;
