@@ -102,18 +102,23 @@ struct Sieve {
   }
 };
 ll n;
-ll mod = 1e9 +7;
+ll mod = 1e9 + 7;
 int main() {
   cin >> n;
-ll ans = 1;
+  ll ans = 1;
   Sieve sieve(10000);
-vector<int> cnt(10000);
-for (int i=1;
-  vector<pair<ll, int>> list = sieve.factor(n);
-  for (auto p : list){
-	(ans *= p.se + 1) %= mod;
-}
-cout << ans << endl;
-
+  vi cnt(10005);
+  rep2(i, 2, n) {
+    vector<pair<ll, int>> list = sieve.factor(i);
+    for (auto p : list) {
+      cnt[p.fi] += p.se;
+    }
+  }
+  rep2(i, 2, n) {
+    if (cnt[i] == 0)
+      continue;
+    (ans *= cnt[i] + 1) %= mod;
+  }
+  cout << ans << endl;
   return 0;
 }

@@ -48,19 +48,5 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   int N, K;
   cin >> N >> K;
-  ll ans = 0;
-  ans += N - K;
-  rep2(a, K + 1, N) {
-    ll now = 0;
-    int dif = a - K;
-    for (int i = 1; i * i <= dif; ++i) {
-      if (dif % i == 0)
-        now += 2;
-      if (i * i == dif)
-        now--;
-    }
-    ans += now;
-  }
-  cout << ans << endl;
   return 0;
 }

@@ -33,38 +33,42 @@ using vii = vector<ii>;
 using gt = greater<int>;
 using minq = priority_queue<int, vector<int>, gt>;
 using P = pair<ll, ll>;
+template <class T> void takeUnique(vector<T> &v) {
+  auto last = std::unique(v.begin(), v.end());
+  v.erase(last, v.end());
+}
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
+int dx[] = {0, 1, 0, -1};
+int dy[] = {1, 0, -1, 0};
+int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-//
 
 int main() {
   int N, M;
   cin >> N >> M;
-  vector<vector<ii>> st(M + 1);
+  vector<set<pair<int, int>>> sets(N);
+  vector<string> ans(M);
   rep(i, M) {
-    int p;
-    int y;
+    int p, y;
     cin >> p >> y;
-    st[p].eb(y, i + 1);
+    p--;
+    sets[p].insert(make_pair(y, i));
   }
-  vector<string> ans(M + 1);
-  for (int i = 0; i < st.size(); i++) {
-    vector<ii> s = st[i];
-    if (s.size() == 0)
-      continue;
-    sort(all(s));
-    string p = to_string(i);
-    int b = 6 - p.size();
-    string s1 = string(b, '0') + p;
-    for (int x = 1; x <= s.size(); x++) {
-      string c = to_string(x);
-      b = 6 - c.size();
-      string s2 = string(b, '0') + c;
-      int id = s[x - 1].se;
-      ans[id] = s1 + s2;
+  rep(i, N) {
+    int t = 1;
+    for (auto it = sets[i].begin(); it != sets[i].end(); it++) {
+      pair<int, int> p = *it;
+      int idx = p.se;
+      int y = p.fi + 1;
+      string ord = to_string(t++);
+      string pref = to_string(i + 1);
+      ord.insert(0, 6 - ord.size(), '0');
+      pref.insert(0, 6 - pref.size(), '0');
+      ans[idx] = pref + ord;
     }
   }
-  rep2(i, 1, M) cout << ans[i] << endl;
+  rep(i, M) cout << ans[i] << endl;
   return 0;
 }
