@@ -45,11 +45,24 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  int n;
+  cin >> n;
+  vector<string> S(n);
+  set<string> st;
+  rep(i, n) {
+    cin >> S[i];
+    if (S[i][0] != '!')
+      st.insert(S[i]);
+  }
+  rep(i, n) {
+    if (S[i][0] == '!') {
+      if (st.count(S[i].substr(1))) {
+        cout << S[i].substr(1) << endl;
+        return 0;
+      }
+    }
+  }
+  puts("satisfiable");
   return 0;
 }

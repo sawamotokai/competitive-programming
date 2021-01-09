@@ -45,11 +45,18 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  ll n, k;
+  cin >> n >> k;
+  if (k & 1) {
+    ll d = n / k;
+    cout << d * d * d << endl;
+  } else {
+    ll d = n / k;
+    ll h = n / (k / 2) - d;
+    ll ans = d * d * d;
+    ans += h * h * h;
+    cout << ans << endl;
+  }
   return 0;
 }

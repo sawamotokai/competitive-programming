@@ -48,6 +48,21 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   int n;
   cin >> n;
-
+  int ans = INF;
+  rep(i, n + 1) {
+    int now = 0;
+    int tmp = i;
+    while (tmp) {
+      now += tmp % 6;
+      tmp /= 6;
+    }
+    tmp = n - i;
+    while (tmp) {
+      now += tmp % 9;
+      tmp /= 9;
+    }
+    chmin(ans, now);
+  }
+  cout << ans << endl;
   return 0;
 }

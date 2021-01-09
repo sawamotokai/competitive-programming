@@ -45,11 +45,43 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
+int N;
+string grid[2];
+ll dp[55][2];
+int mod = 1e9 + 7;
+
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  cin >> N;
+  rep(i, 2) cin >> grid[i];
+  if (N == 1) {
+    cout << 3 << endl;
+    return 0;
+  }
+  int s = 0;
+  ll ans = 3;
+  if (grid[0][0] == grid[0][1]) {
+    s = 2;
+    ans = 6;
+  }
+  if (grid[0][0] == grid[1][0])
+    s = 1;
+  rep2(i, s, N - 1) {
+    if (grid[0][i] == grid[0][i + 1]) {
+      // yoko
+      if (grid[0][i - 1] == grid[1][i - 1]) {
+        (ans *= 2) %= mod;
+      } else {
+        (ans *= 3) %= mod;
+      }
+      i++;
+    } else {
+      if (grid[0][i - 1] == grid[1][i - 1]) {
+        (ans *= 2) %= mod;
+      } else {
+        (ans *= 1) %= mod;
+      }
+    }
+  }
+  cout << ans << endl;
   return 0;
 }

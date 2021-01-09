@@ -45,11 +45,47 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  int n;
+  cin >> n;
+  int lo = 0;
+  int hi = n - 1;
+  int mid = (lo + hi) / 2;
+  string fi;
+  cout << lo << endl;
+  cin >> fi;
+  if (fi == "Vacant")
+    return 0;
+  rep(i, 19) {
+    mid = (lo + hi) / 2;
+    cout << mid << endl;
+    // cout << lo << " " << mid << " " << hi << " " << endl;
+    int d = mid - lo;
+    string q;
+    cin >> q;
+    if (q == "Vacant")
+      return 0;
+    if (d % 2 == 0) {
+      if (q == fi) {
+        lo = mid + 1;
+        if (q == "Male")
+          fi = "Female";
+        else
+          fi = "Male";
+      } else {
+        hi = mid - 1;
+      }
+    } else {
+      if (q == fi)
+        hi = mid - 1;
+      else {
+        lo = mid + 1;
+        if (q == "Male")
+          fi = "Female";
+        else
+          fi = "Male";
+      }
+    }
+  }
   return 0;
 }

@@ -41,35 +41,26 @@ string s, t;
 int main() {
   cin >> s >> t;
   map<char, char> mp;
-  vi exists(1000);
   int n = s.size();
-  bool ok = true;
-  rep(i, n) exists[t[i]] = true;
   rep(i, n) {
-    if (mp.find(t[i]) == mp.end()) {
-      if (t[i] != s[i]) {
-        if (exists[s[i]]) {
-          if (mp.find(s[i]) != mp.end() && mp[s[i]] != t[i])
-            ok = false;
-          mp[t[i]] = s[i];
-          mp[s[i]] = t[i];
-        }
-      } else {
-        if (mp.find(t[i]) != mp.end() && mp[t[i]] != t[i])
-          ok = false;
-        mp[t[i]] = t[i];
+    if (mp.find(s[i]) != mp.end())
+      s[i] = mp[s[i]];
+    if (s[i] != t[i]) {
+      if (mp.find(s[i]) != mp.end() && mp[t[i]] != s[i]) {
+        cout << s[i] << " " << t[i] << endl;
+        puts("No");
+        return 0;
       }
-      if (t[i] == s[i])
-        mp[t[i]] = t[i];
-      else if (exists[s[i]] && mp.find(s[i]) == mp.end() ||
-               (mp.find(s[i]) != mp.end() && mp[s[i]] == t[i]))
-        mp[t[i]] = s[i];
+      mp[s[i]] = t[i];
+      mp[t[i]] = s[i];
     } else {
-      if (mp[t[i]] == s[i])
-        continue;
-      ok = false;
+      if (mp.find(s[i]) != mp.end()) {
+        cout << s[i] << " " << t[i] << endl;
+        puts("No");
+        return 0;
+      }
     }
   }
-  ok();
+  puts("Yes");
   return 0;
 }

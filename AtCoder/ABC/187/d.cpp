@@ -45,11 +45,30 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
+int n;
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  cin >> n;
+  vector<P> AB(n);
+  rep(i, n) cin >> AB[i].fi >> AB[i].se;
+  sort(all(AB), [](P a, P b) {
+    if (a.fi * 2 + a.se != b.fi * 2 + b.se)
+      return a.fi * 2 + a.se > b.fi * 2 + b.se;
+    else
+      return a.fi > b.fi;
+  });
+  // rep(i, n) cout << AB[i].fi << " " << AB[i].se << endl;
+  ll sumAoki = 0;
+  rep(i, n) sumAoki += AB[i].fi;
+  ll sumTaka = 0;
+  int ans = 0;
+  rep(i, n) {
+    if (sumTaka > sumAoki) {
+      break;
+    }
+    sumTaka += AB[i].fi + AB[i].se;
+    sumAoki -= AB[i].fi;
+    ans++;
+  }
+  cout << ans << endl;
   return 0;
 }

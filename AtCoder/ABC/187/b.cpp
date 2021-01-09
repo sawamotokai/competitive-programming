@@ -39,17 +39,30 @@ template <class T> void takeUnique(vector<T> &v) {
 }
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-int dx[] = {0, 1, 0, -1};
-int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  int n;
+  cin >> n;
+  vector<P> p(n);
+  rep(i, n) cin >> p[i].fi >> p[i].se;
+  int ans = 0;
+  rep(i, n) {
+    rep(j, n) {
+      if (i == j)
+        continue;
+      // rep2(j, i + 1, n - 1) {
+      int dx = p[j].fi - p[i].fi;
+      int dy = p[j].se - p[i].se;
+      // cout << dx << " " << dy << endl;
+      if (dx >= dy && dy >= -dx)
+        ans++;
+    }
+  }
+
+  cout << ans << endl;
+
   return 0;
 }

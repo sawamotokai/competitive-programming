@@ -45,11 +45,19 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
 int main() {
+  int N, K;
   cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  ll ans = 0;
+  rep2(b, 1, N) {
+    int di = N / b;
+    int r = N % b;
+    int freq = max(0LL, b - K);
+    ans += freq * di;
+    ans += max(0LL, r - K + 1LL);
+    if (K == 0)
+      ans--;
+  }
+  cout << ans << endl;
   return 0;
 }

@@ -45,11 +45,23 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll N, K;
+ll a[10005];
+ll b[10005];
 int main() {
-  cin >> N >> K;
-  ll numer = (K - 1) * (N - K) * 6 + (N - K + K - 1) * 3 + 1;
-  double ans = double(numer) / double(N) / double(N) / double(N);
-  printf("%.12f\n", ans);
+  int n;
+  cin >> n;
+  rep(i, n) cin >> a[i];
+  rep(i, n) cin >> b[i];
+
+  ll need = 0;
+  ll can = 0;
+  rep(i, n) {
+    if (a[i] > b[i])
+      need += a[i] - b[i];
+    else
+      can += (b[i] - a[i]) / 2;
+  }
+  bool ok = need <= can;
+  ok();
   return 0;
 }
