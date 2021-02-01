@@ -45,26 +45,45 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+template <typename T> struct BIT {
+  int n;
+  vector<T> d;
+  BIT(int n = 0) : n(n), d(n + 1) {}
+  void add(int i, T x = 1) {
+    for (i++; i <= n; i += i & -i) {
+      d[i] += x;
+    }
+  }
+  T sum(int i) {
+    T x = 0;
+    for (i++; i; i -= i & -i) {
+      x += d[i];
+    }
+    return x;
+  }
+  T sum(int l, int r) { return sum(r - 1) - sum(l - 1); }
+};
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
+  int n;
+  cin >> n;
+  BIT<int> bit(n);
+  BIT<int> sm(n);
+  vi a(n);
+  rep(i, n) { cin >> a[i]; }
   ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  rep(i, n) {
+    now += i - bit.sum(a[i]);
+    bit.add(a[i]);
   }
-  cout << ans << endl;
+  rep(k, n) {
+    if (!k) {
+      cout << now << endl;
+      continue;
+    }
+    int idx = n - k - 1;
+    now -= idx - bit.sum(a[idx]);
+    bit.add()
+  }
   return 0;
 }

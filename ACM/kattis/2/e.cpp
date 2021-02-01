@@ -45,25 +45,40 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int H, W;
+int grid[505][505];
+int visited[505][505];
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> H >> W;
+
+  rep(i, H) {
+    rep(j, W) { cin >> grid[i][j]; }
   }
-  sort(all(events));
-  ll now = 0;
+  int h, w;
+  cin >> h >> w;
+  h--;
+  w--;
+  int d = grid[h][w];
   ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  queue<ii> q;
+  q.emplace(h, w);
+  while (q.size()) {
+    auto [i, j] = q.front();
+    q.pop();
+    if (visited[i][j])
+      continue;
+    visited[i][j] = 1;
+    ans -= max(grid[i][j], d);
+    rep(k, 8) {
+      int ni = i + dyy[k];
+      int nj = j + dxx[k];
+      if (ni < 0 || ni >= H || nj < 0 || nj >= W)
+        continue;
+      if (visited[ni][nj])
+        continue;
+      if (grid[ni][nj] < 0)
+        q.emplace(ni, nj);
+    }
   }
   cout << ans << endl;
   return 0;

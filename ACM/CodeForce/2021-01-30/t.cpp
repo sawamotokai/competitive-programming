@@ -46,25 +46,22 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  vi t1(3);
+  vi t2(3);
+  rep(i, 3) cin >> t1[i];
+  rep(i, 3) cin >> t2[i];
+  sort(all(t1));
+  sort(all(t2));
+  rep(i, 3) {
+    if (t1[i] != t2[i]) {
+      puts("NO");
+      return 0;
+    }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  if (t1[0] * t1[0] + t1[1] * t1[1] != t1[2] * t1[2]) {
+    puts("NO");
+    return 0;
   }
-  cout << ans << endl;
+  puts("YES");
   return 0;
 }

@@ -45,26 +45,17 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int l, r;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> l >> r;
+  if (l == 0 && r == 0) {
+    puts("Not a moose");
+    return 0;
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  if (l == r) {
+    printf("Even %d\n", l + r);
+  } else {
+    printf("Odd %d\n", max(l, r) * 2);
   }
-  cout << ans << endl;
   return 0;
 }

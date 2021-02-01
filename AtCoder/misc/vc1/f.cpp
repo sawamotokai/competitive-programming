@@ -45,26 +45,43 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+vi to[104];
+ll dist[104];
+ll ways[104];
+int mod = 1e9 + 7;
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  int N, s, t, M;
+  cin >> N >> s >> t >> M;
+  s--;
+  t--;
+  rep(i, N) dist[i] = INF;
+  rep(i, M) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  queue<int> q;
+  q.emplace(s);
+  ways[s] = 1;
+  dist[s] = 0;
+  while (q.size()) {
+    int v = q.front();
+    q.pop();
+    for (int u : to[v]) {
+      if (dist[u] == dist[v] + 1) {
+        (ways[u] += ways[v]) %= mod;
+        // q.emplace(u, ways[u]);
+      } else if (chmin(dist[u], dist[v] + 1)) {
+        ways[u] = ways[v];
+        q.emplace(u);
+      }
+    }
   }
-  cout << ans << endl;
+  cout << ways[t] << endl;
+  // rep(i, N) { cout << ways[i] << endl; }
   return 0;
 }

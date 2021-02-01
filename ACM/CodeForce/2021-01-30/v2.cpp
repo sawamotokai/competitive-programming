@@ -45,34 +45,62 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int dp[1004];
+int visited[1004];
+ii coords[1005];
+int R[1004];
+int n;
+
+bool touching(int i, int j) {
+  ll distSq = (coords[i].fi - coords[j].fi) * (coords[i].fi - coords[j].fi) +
+              (coords[i].se - coords[j].se) * (coords[i].se - coords[j].se);
+  if (distSq == (R[i] + R[j]) * (R[i] + R[j]))
+    return 1;
+  return 0;
+}
+
+ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
+ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+
 int main() {
-  int n, m;
-  cin >> n >> m;
-  vvi a(n, vi(m));
-  vvi ans(n, vi(m));
-  rep(i, n) {
-    string in;
-    cin >> in;
-    rep(j, m) { a[i][j] = in[j] - '0'; }
-  }
-  rep(i, n) {
-    if (i == n - 1)
-      continue;
-    rep(j, m) {
-      if (j == 0 or j == m - 1)
+  cin >> n;
+  rep(i, n) cin >> coords[i].fi >> coords[i].se >> R[i];
+  rep(i, 1003) { dp[i] = INF; }
+  dp[0] = 1;
+  queue<ii> q;
+  q.push({0, -1});
+  while (q.size()) {
+    auto [v, from] = q.front();
+    q.pop();
+    rep(u, n) {
+      if (from == u)
         continue;
-      if (a[i][j]) {
-        ans[i + 1][j] = a[i][j];
-        a[i + 1][j + 1] -= a[i][j];
-        a[i + 1][j - 1] -= a[i][j];
-        a[i + 2][j] -= a[i][j];
-        a[i][j] = 0;
+      if (!touching(v, u))
+        continue;
+      if (dp[u] == INF) {
+        q.emplace(u, v);
+        continue;
+      }
+      if (dp[u] != dp[from]) {
+        puts("The input gear cannot move.");
+        return 0;
       }
     }
+    if (from == -1)
+      dp[v] = 1;
+    else
+      dp[v] = -dp[from];
   }
-  rep(i, n) {
-    rep(j, m) { cout << ans[i][j]; }
-    cout << endl;
+  if (dp[n - 1] == INF) {
+    puts("The input gear is not connected to the output gear.");
+    return 0;
   }
+  int a = R[n - 1];
+  int b = R[0];
+  int g = gcd(a, b);
+  a /= g;
+  b /= g;
+  a *= dp[n - 1];
+  printf("%d:%d\n", a, b);
   return 0;
 }

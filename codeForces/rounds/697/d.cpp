@@ -44,27 +44,47 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-
-int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+void solve() {
+  ll n, m;
+  cin >> n >> m;
+  vll a(n);
+  vll b(n);
+  rep(i, n) cin >> a[i];
+  rep(i, n) cin >> b[i];
+  vll imp, reg;
+  rep(i, n) {
+    if (b[i] == 1)
+      reg.pb(a[i]);
+    else
+      imp.pb(a[i]);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  sort(reg.rbegin(), reg.rend());
+  sort(imp.rbegin(), imp.rend());
+  int len = imp.size();
+  int len2 = reg.size();
+  vll ss(len + 1);
+  vll ss2(len2 + 1);
+  rep(i, len) ss[i + 1] += ss[i] + imp[i];
+  rep(i, len2) ss2[i + 1] += ss2[i] + reg[i];
+  int ans = INF;
+  rep(i, len + 1) {
+    ll now = ss[i];
+    auto it = lower_bound(all(ss2), m - now);
+    if (it == ss2.end() || *it < m - now) {
+      continue;
+    }
+    int j = it - ss2.begin();
+    chmin(ans, i * 2 + j);
   }
+  if (ans == INF)
+    ans = -1;
   cout << ans << endl;
+}
+
+int t;
+int main() {
+  cin >> t;
+  while (t--)
+    solve();
   return 0;
 }

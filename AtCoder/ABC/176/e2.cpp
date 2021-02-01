@@ -45,26 +45,41 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int H, W, M;
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> H >> W >> M;
+  vi row(H), col(W);
+
+  set<ii> st;
+  rep(i, M) {
+    int h, w;
+    cin >> h >> w;
+    h--;
+    w--;
+    row[h]++;
+    col[w]++;
+    st.insert({h, w});
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
+  int mxH = -1;
+  int mxW = -1;
+  rep(i, H) chmax(mxH, row[i]);
+  rep(i, W) chmax(mxW, col[i]);
+  int ans = mxH + mxW - 1;
+  vi rws;
+  vi cls;
+  rep(i, H) if (row[i] == mxH) rws.pb(i);
+  rep(i, W) if (col[i] == mxW) cls.pb(i);
+  [&] {
+    for (int r : rws) {
+      for (int c : cls) {
+        if (st.size() && st.count({r, c}) == 0) {
+          ans++;
+          return;
+        }
+      }
+    }
+  }();
   cout << ans << endl;
   return 0;
 }

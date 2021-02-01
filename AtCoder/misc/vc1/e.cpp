@@ -47,23 +47,32 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 
 int main() {
   int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
+  cin >> N;
+  vii red(N);
+  vii blue(N);
+  rep(i, N) cin >> red[i].fi >> red[i].se;
+  rep(i, N) cin >> blue[i].fi >> blue[i].se;
+  sort(all(red));
+  sort(all(blue));
+  vi used(N);
+  int ans = 0;
   rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+    int bx = blue[i].fi;
+    int mxRy = -1;
+    int mxId = -1;
+    rep(j, N) {
+      int rx = red[j].fi;
+      if (rx >= bx)
+        break;
+      if (used[j])
+        continue;
+      if (red[j].se < blue[i].se && chmax(mxRy, red[j].se))
+        mxId = j;
+    }
+    if (mxId == -1)
+      continue;
+    used[mxId] = 1;
+    ans++;
   }
   cout << ans << endl;
   return 0;

@@ -39,32 +39,24 @@ template <class T> void takeUnique(vector<T> &v) {
 }
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-int dx[] = {0, 1, 0, -1};
-int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int n;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> n;
+  vector<P> B(n);
+  rep(i, n) cin >> B[i].fi >> B[i].se;
+  int ans = n;
+  map<ii, int> mp;
+  rep(i, n) {
+    rep(j, n) {
+      if (i == j)
+        continue;
+      mp[{B[i].fi - B[j].fi, B[i].se - B[j].se}]++;
+    }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
+  for (auto p : mp)
+    chmin(ans, n - p.se);
   cout << ans << endl;
-  return 0;
-}

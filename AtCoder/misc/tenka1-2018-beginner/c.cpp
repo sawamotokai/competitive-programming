@@ -47,23 +47,60 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 
 int main() {
   int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
-  ll now = 0;
+  cin >> N;
+  vi A(N);
+  rep(i, N) cin >> A[i];
+  minq q;
+  rep(i, N) q.push(A[i]);
   ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  if (N & 1) {
+    ll now = 0;
+    rep(i, N / 2) {
+      now -= q.top() * 2;
+      q.pop();
+    }
+    now += q.top();
+    q.pop();
+    now += q.top();
+    q.pop();
+    while (q.size()) {
+      now += 2 * q.top();
+      q.pop();
+    }
+    chmax(ans, now);
+    priority_queue<int> q2;
+    rep(i, N) q2.push(A[i]);
+    now = 0;
+    rep(i, N / 2) {
+      now += q2.top() * 2;
+      q2.pop();
+    }
+    now -= q2.top();
+    q2.pop();
+    now -= q2.top();
+    q2.pop();
+    while (q2.size()) {
+      now -= 2 * q2.top();
+      q2.pop();
+    }
+    chmax(ans, now);
+  } else {
+    priority_queue<int> q2;
+    ll now = 0;
+    rep(i, N) q2.push(A[i]);
+    rep(i, N / 2 - 1) {
+      now += q2.top() * 2;
+      q2.pop();
+    }
+    now += q2.top();
+    q2.pop();
+    now -= q2.top();
+    q2.pop();
+    while (q2.size()) {
+      now -= q2.top() * 2;
+      q2.pop();
+    }
+    chmax(ans, now);
   }
   cout << ans << endl;
   return 0;

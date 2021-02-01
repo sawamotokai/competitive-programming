@@ -44,27 +44,59 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+string getName() {
+  string s;
+  cin >> s;
+  s = s.substr(1, s.size() - 1);
+  while (1) {
+    string t;
+    cin >> t;
+    s += " " + t;
+    if (t.back() == '"') {
+      s = s.substr(0, s.size() - 1);
+      return s;
+    }
+  }
+}
 
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  int n, m, k;
+  cin >> n >> m >> k;
+  priority_queue<pair<string, int>, vector<pair<string, int>>,
+                 greater<pair<string, int>>>
+      pq;
+  pq.emplace("Jane Eyre", k);
+  rep(i, n) {
+    string s = getName();
+    int page;
+    cin >> page;
+    pq.emplace(s, page);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  vector<pair<ll, pair<string, int>>> pres(m);
+
+  rep(i, m) {
+    ll t;
+    string s;
+    int page;
+    cin >> t;
+    s = getName();
+    cin >> page;
+    pres[i] = make_pair(t, make_pair(s, page));
   }
-  cout << ans << endl;
+  sort(all(pres));
+  int ptr = 0;
+  ll time = 0;
+  while (pq.size()) {
+    while (ptr < m && time >= pres[ptr].fi) {
+      pq.push(pres[ptr].se);
+      ptr++;
+    }
+    time += pq.top().se;
+    if (pq.top().fi == "Jane Eyre") {
+      cout << time << endl;
+      return 0;
+    }
+    pq.pop();
+  }
   return 0;
 }

@@ -39,40 +39,66 @@ template <class T> void takeUnique(vector<T> &v) {
 }
 const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
-int dx[] = {0, 1, 0, -1};
+int d[] = {0, 1, 0, -1};
 int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int dp[1004];
+P coords[1005];
+ll R[1004];
+int n;
+
+bool touching(int i, int j) {
+  ll distSq = (coords[i].fi - coords[j].fi) * (coords[i].fi - coords[j].fi) +
+              (coords[i].se - coords[j].se) * (coords[i].se - coords[j].se);
+  if (distSq == (R[i] + R[j]) * (R[i] + R[j]))
+    return 1;
+  return 0;
+}
+
+ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
+ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+
 int main() {
-  int n, m;
-  cin >> n >> m;
-  vvi a(n, vi(m));
-  vvi ans(n, vi(m));
-  rep(i, n) {
-    string in;
-    cin >> in;
-    rep(j, m) { a[i][j] = in[j] - '0'; }
-  }
-  rep(i, n) {
-    if (i == n - 1)
-      continue;
-    rep(j, m) {
-      if (j == 0 or j == m - 1)
+  cin >> n;
+  rep(i, n) cin >> coords[i].fi >> coords[i].se >> R[i];
+  rep(i, 1003) { dp[i] = INF; }
+  dp[0] = 0;
+  queue<int> q;
+  q.push(0);
+  while (q.size()) {
+    int v = q.front();
+    q.pop();
+    rep(u, n) {
+      if (!touching(u, v))
         continue;
-      if (a[i][j]) {
-        ans[i + 1][j] = a[i][j];
-        a[i + 1][j + 1] -= a[i][j];
-        a[i + 1][j - 1] -= a[i][j];
-        a[i + 2][j] -= a[i][j];
-        a[i][j] = 0;
-      }
+      if (chmin(dp[u], dp[v] + 1))
+        q.push(u);
     }
   }
   rep(i, n) {
-    rep(j, m) { cout << ans[i][j]; }
-    cout << endl;
+    rep(j, n) {
+      if (i == j || !touching(i, j))
+        continue;
+      if ((dp[i] & 1) == (dp[j] & 1)) {
+        puts("The input gear cannot move.");
+        return 0;
+      }
+    }
   }
+  if (dp[n - 1] == INF) {
+    puts("The input gear is not connected to the output gear.");
+    return 0;
+  }
+  int a = R[n - 1];
+  int b = R[0];
+  int g = gcd(a, b);
+  a /= g;
+  b /= g;
+  if (dp[n - 1] & 1)
+    a *= -1;
+  printf("%d:%d\n", a, b);
   return 0;
 }

@@ -45,26 +45,48 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int H, W, K;
+ll dp[5005][5005];
+char grid[5005][5005];
+int mod = 998244353;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> H >> W >> K;
+  rep(i, K) {
+    int h, w;
+    char c;
+    cin >> h >> w >> c;
+    h--;
+    w--;
+    grid[h][w] = c;
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  dp[0][0] = 1;
+  rep(i, H) {
+    rep(j, W) {
+      if (grid[i][j] == 'X') {
+        (dp[i + 1][j] += dp[i][j]) %= mod;
+        (dp[i][j + 1] += dp[i][j]) %= mod;
+      } else if (grid[i][j] == 'R') {
+        (dp[i][j + 1] += dp[i][j]) %= mod;
+      } else if (grid[i][j] == 'D') {
+        (dp[i + 1][j] += dp[i][j]) %= mod;
+      } else {
+        //(dp[i][j] *= 2) %= mod;
+        (dp[i + 1][j] += dp[i][j] * 2) %= mod;
+        (dp[i][j + 1] += dp[i][j] * 2) %= mod;
+        //
+        (dp[i][j + 1] += dp[i][j]) %= mod;
+        //
+        (dp[i + 1][j] += dp[i][j]) %= mod;
+      }
+    }
   }
+  ll ans = dp[H - 1][W - 1];
+  rep(i, H * W - K)(ans *= 3) %= mod;
   cout << ans << endl;
+  cout << dp[H - 1][W - 1] << endl;
+  rep(i, H) {
+    rep(j, W) { cout << dp[i][j] << " "; }
+    cout << endl;
+  }
   return 0;
 }

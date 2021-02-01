@@ -45,26 +45,27 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int k;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> k;
+  queue<ll> q;
+  rep2(i, 1, 9) q.push(i);
+  int cnt = 0;
+  while (q.size()) {
+    ll n = q.front();
+    q.pop();
+    cnt++;
+    if (cnt == k) {
+      cout << n << endl;
+      return 0;
+    }
+    int d = n % 10;
+    n *= 10;
+    if (d != 0)
+      q.push(n + d - 1);
+    q.push(n + d);
+    if (d != 9)
+      q.push(n + d + 1);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
   return 0;
 }

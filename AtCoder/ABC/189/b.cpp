@@ -32,7 +32,6 @@ using vvi = vector<vi>;
 using vii = vector<ii>;
 using gt = greater<int>;
 using minq = priority_queue<int, vector<int>, gt>;
-using P = pair<ll, ll>;
 template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
@@ -45,26 +44,21 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+ll N, X;
+ll V[1004];
+ll P[1004];
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
+  cin >> N >> X;
+  X *= 100;
+  ll sum = 0;
+  rep(i, N) cin >> V[i] >> P[i];
   rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+    sum += V[i] * P[i];
+    if (sum > X) {
+      cout << i + 1 << endl;
+      return 0;
+    }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
+  cout << -1 << endl;
   return 0;
 }

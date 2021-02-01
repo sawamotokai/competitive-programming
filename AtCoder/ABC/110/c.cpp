@@ -41,26 +41,28 @@ string s, t;
 int main() {
   cin >> s >> t;
   map<char, char> mp;
+  map<char, char> mp2;
   int n = s.size();
+  bool ok = true;
+  auto has = [&](map<char, char> mp, char c) {
+    return !(mp.find(c) == mp.end());
+  };
   rep(i, n) {
-    if (mp.find(s[i]) != mp.end())
-      s[i] = mp[s[i]];
-    if (s[i] != t[i]) {
-      if (mp.find(s[i]) != mp.end() && mp[t[i]] != s[i]) {
-        cout << s[i] << " " << t[i] << endl;
-        puts("No");
-        return 0;
+    if (has(mp, s[i])) {
+      if (mp[s[i]] != t[i]) {
+        ok = false;
       }
-      mp[s[i]] = t[i];
-      mp[t[i]] = s[i];
     } else {
-      if (mp.find(s[i]) != mp.end()) {
-        cout << s[i] << " " << t[i] << endl;
-        puts("No");
-        return 0;
+      mp[s[i]] = t[i];
+      if (has(mp2, t[i])) {
+        if (mp[t[i]] != s[i]) {
+          ok = false;
+        }
+      } else {
+        mp2[t[i]] = s[i];
       }
     }
   }
-  puts("Yes");
+  ok();
   return 0;
 }

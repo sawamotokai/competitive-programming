@@ -45,26 +45,33 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+ll N;
+ll A[10005];
+ll f(int l, int r) {
+  if (r < l)
+    return 0;
+  if (l < 0 || r >= N || l >= N || r < 0)
+    return 0;
+  if (l == r)
+    return A[l];
+  ll mn = INF;
+  int idx = -1;
+  rep2(i, l, r) if (chmin(mn, A[i])) idx = i;
+  ll now = (ll)(r - l + 1) * mn;
+  ll left = f(l, idx - 1);
+  // cout << l << " " << r << endl;
+  ll right = f(idx + 1, r);
+  // cout << idx << endl;
+  // cout << now << " " << left << " " << right << endl;
+  chmax(now, left);
+  chmax(now, right);
+  return now;
+}
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
-  ll now = 0;
+  cin >> N;
+  rep(i, N) cin >> A[i];
   ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
+  cout << f(0, N - 1) << endl;
   return 0;
 }

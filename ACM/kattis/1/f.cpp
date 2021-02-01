@@ -44,27 +44,36 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+//
+
+int k, w, l;
+double f(int d, double h, double b) {
+  if (b == M_PI / 2)
+    return INF;
+  if (d == k) {
+    h += 2 * tan(b) * w / 2;
+    return h;
+  }
+  double nb = atan(2 * tan(b));
+  // cout << nb << " " << tan(nb) << endl;
+  double now = h + 2 * tan(b) * w;
+  return f(d + 1, now, nb);
+}
 
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> k >> w >> l;
+  double lb = 0;
+  double ub = M_PI / 2;
+  rep(i, 100) {
+    double md = (lb + ub) / 2.0;
+    double ih = tan(md) * w / 2.0;
+    double h = f(1, ih, md);
+    if (h > l) {
+      ub = md;
+    } else {
+      lb = md;
+    }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
+  printf("%.10f\n", lb * 180 / M_PI);
   return 0;
 }

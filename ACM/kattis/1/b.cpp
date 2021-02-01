@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <cassert>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
@@ -45,26 +46,25 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+ll s, p, m, n;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> s >> p >> m >> n;
+  vector<ll> T(n);
+  rep(i, n) cin >> T[i];
+  vll dp(n + 1, LINF);
+  dp[0] = min(s, p);
+  rep(i, n) {
+    if (!i)
+      continue;
+    auto lb = lower_bound(all(T), T[i] - m + 1);
+    int idx = lb - T.begin();
+    if (idx == 0) {
+      chmin(dp[i], p);
+    } else {
+      chmin(dp[i], dp[idx - 1] + p);
+    }
+    chmin(dp[i], dp[i - 1] + s);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
+  cout << dp[n - 1] << endl;
   return 0;
 }

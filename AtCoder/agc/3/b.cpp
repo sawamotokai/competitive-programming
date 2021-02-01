@@ -46,24 +46,19 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
-  ll now = 0;
+  int n;
+  cin >> n;
+  vi a(n + 1);
+  rep(i, n) cin >> a[i];
   ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  rep(i, n) {
+    ans += a[i] / 2;
+    if (a[i] & 1) {
+      if (a[i + 1] == 0)
+        continue;
+      a[i + 1]--;
+      ans++;
+    }
   }
   cout << ans << endl;
   return 0;

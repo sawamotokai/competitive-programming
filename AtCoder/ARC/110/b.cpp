@@ -45,26 +45,65 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int N;
+string S;
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> N >> S;
+  if (S == "1") {
+    ll out = 2e10;
+    printf("%lld\n", out);
+    return 0;
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  if (S == "11" or S == "0") {
+    ll out = 1e10;
+    printf("%lld\n", out);
+    return 0;
   }
+  if (S == "00") {
+    cout << 0 << endl;
+    return 0;
+  }
+  if (S == "01") {
+    ll out = 1e10 - 1;
+    printf("%lld\n", out);
+    return 0;
+  }
+  if (S == "10") {
+    ll out = 1e10;
+    printf("%lld\n", out);
+    return 0;
+  }
+  int f = -1;
+  rep(i, 3) {
+    if (S[i] == '0') {
+      f = i;
+      break;
+    }
+  }
+  if (f == -1) {
+    cout << 0 << endl;
+    return 0;
+  }
+  int z = 0;
+  int c = 0;
+  rep2(i, f, N - 1) {
+    if (c == 0) {
+      z++;
+      if (S[i] != '0') {
+        cout << 0 << endl;
+        return 0;
+      }
+    } else {
+      if (S[i] != '1') {
+        cout << 0 << endl;
+        return 0;
+      }
+    }
+    c++;
+    c %= 3;
+  }
+  ll ans = 1e10 - z + (S.back() == '0');
   cout << ans << endl;
   return 0;
 }

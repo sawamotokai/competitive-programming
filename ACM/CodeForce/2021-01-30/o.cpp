@@ -45,25 +45,37 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int H, W;
+int dist[505][505];
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> H >> W;
+  rep(i, H) rep(j, W) dist[i][j] = INF;
+  vvi grid(H, vi(W));
+  rep(i, H) {
+    string s;
+    cin >> s;
+    rep(j, W) { grid[i][j] = s[j] - '0'; }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  queue<ii> q;
+  dist[0][0] = 0;
+  q.emplace(0, 0);
+  while (q.size()) {
+    auto [i, j] = q.front();
+    q.pop();
+    int k = grid[i][j];
+    rep(l, 4) {
+      int ni = i + k * dy[l];
+      int nj = j + k * dx[l];
+      if (ni < 0 or ni >= H or nj < 0 or nj >= W)
+        continue;
+      if (chmin(dist[ni][nj], dist[i][j] + 1))
+        q.emplace(ni, nj);
+    }
+  }
+  int ans = dist[H - 1][W - 1];
+  if (ans == INF) {
+    puts("IMPOSSIBLE");
+    return 0;
   }
   cout << ans << endl;
   return 0;

@@ -45,26 +45,50 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+vi to[100005];
+int n;
+vi ans;
+
+void dfs(int v = 0, int from = -1, int after = -1) {
+  int c = to[v].size();
+  if (from != -1)
+    c--;
+  int cnt = 0;
+  bool done = false;
+  if (!c)
+    ans.pb(v);
+  else {
+    for (int u : to[v]) {
+      if (from == u)
+        continue;
+      if (after) {
+        if ((c / 2 == cnt) && !done) {
+          ans.pb(v);
+          done = true;
+        }
+      } else {
+        if ((c - 1) / 2 + 1 == cnt && !done) {
+          ans.pb(v);
+          done = true;
+        }
+      }
+      dfs(u, v, done);
+      cnt++;
+    }
+  }
+}
+
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  cin >> n;
+  rep(i, n - 1) {
+    int a, b;
+    cin >> a >> b;
+    to[a].push_back(b);
+    to[b].push_back(a);
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  dfs();
+  rep(i, ans.size()) {
+    printf("%d%c", ans[i], i == ans.size() - 1 ? '\n' : ' ');
   }
-  cout << ans << endl;
   return 0;
 }

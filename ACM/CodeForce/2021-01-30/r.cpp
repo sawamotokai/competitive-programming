@@ -45,26 +45,16 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int n;
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
-  }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
-  }
-  cout << ans << endl;
+  cin >> n;
+  vector<pair<string, string>> names(n);
+  rep(i, n) cin >> names[i].fi >> names[i].se;
+  sort(all(names), [](pair<string, string> a, pair<string, string> b) {
+    if (a.se == b.se)
+      return a.fi < b.fi;
+    return a.se < b.se;
+  });
+  rep(i, n) cout << names[i].fi << " " << names[i].se << endl;
   return 0;
 }

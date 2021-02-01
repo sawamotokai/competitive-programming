@@ -45,25 +45,27 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+ll dp[2000005];
 int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+  int n;
+  cin >> n;
+  vector<pair<int, pair<int, int>>> d(n);
+  rep(i, n) {
+    int m, f, w;
+    cin >> m >> f >> w;
+    d[i] = make_pair(m, make_pair(f, w));
   }
-  sort(all(events));
-  ll now = 0;
+  sort(all(d));
+  int ptr = 0;
+  ll mx = 0;
   ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  rep(i, n) {
+    int t = d[i].fi;
+    while (ptr <= t)
+      chmax(mx, dp[ptr++]);
+    int nt = t + d[i].se.se;
+    chmax(dp[nt], mx + d[i].se.fi);
+    chmax(ans, dp[nt]);
   }
   cout << ans << endl;
   return 0;

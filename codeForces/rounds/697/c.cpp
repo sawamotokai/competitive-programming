@@ -44,27 +44,34 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-
-int main() {
-  int N;
-  ll C;
-  cin >> N >> C;
-  vector<P> events;
-  rep(i, N) {
-    ll a, b, c;
-    cin >> a >> b >> c;
-    events.emplace_back(a, c);
-    events.emplace_back(b + 1, -c);
+void solve() {
+  ll a, b, k;
+  cin >> a >> b >> k;
+  vll A(k), B(k);
+  rep(i, k) cin >> A[i];
+  rep(i, k) cin >> B[i];
+  ll ans = k * (k - 1) / 2;
+  vll ca(a + 1), cb(b + 1);
+  rep(i, k) ca[A[i]]++, cb[B[i]]++;
+  rep2(i, 1, a) {
+    if (ca[i] > 1) {
+      ll sub = ca[i] * (ca[i] - 1) / 2;
+      ans -= sub;
+    }
   }
-  sort(all(events));
-  ll now = 0;
-  ll ans = 0;
-  ll last = 0;
-  for (auto p : events) {
-    ans += (p.fi - last) * min(C, now);
-    now += p.se;
-    last = p.fi;
+  rep2(i, 1, b) {
+    if (cb[i] > 1) {
+      ll sub = cb[i] * (cb[i] - 1) / 2;
+      ans -= sub;
+    }
   }
   cout << ans << endl;
+}
+
+int t;
+int main() {
+  cin >> t;
+  while (t--)
+    solve();
   return 0;
 }
