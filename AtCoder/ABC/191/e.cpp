@@ -30,8 +30,8 @@ using vll = vector<ll>;
 using ii = pair<int, int>;
 using vvi = vector<vi>;
 using vii = vector<ii>;
-using gt = greater<int>;
-using minq = priority_queue<int, vector<int>, gt>;
+using gt = greater<ii>;
+using minq = priority_queue<ii, vector<ii>, gt>;
 using P = pair<ll, ll>;
 template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
@@ -45,32 +45,45 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int n, k;
-string s;
-map<char, int> mp;
-char f(char a, char b) {
-  int p = mp[a] * mp[b];
-  if (p == 6)
-    return 'P';
-  else if (p == 10)
-    return 'R';
-  else if (p == 15)
-    return 'S';
-  else
-    return a;
-}
+struct edge {
+  int to, w;
+  edge(int to, int w) : to(to), w(w){};
+};
+
+vector<edge> to[2003];
+
 int main() {
-  cin >> n >> k >> s;
-  mp['R'] = 2;
-  mp['P'] = 3;
-  mp['S'] = 5;
-  rep(i, k) {
-    string t = s + s;
-    s = "";
-    for (int j = 0; j < t.size(); j += 2) {
-      s += f(t[j], t[j + 1]);
-    }
+  int N, M;
+  cin >> N >> M;
+  rep(i, M) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    a--;
+    b--;
+    to[a].eb(b, c);
   }
-  cout << s[0] << endl;
+  rep(i, N) {
+    minq q;
+    vector<int> dist(N);
+    rep(j, N) dist[j] = INF;
+    dist[i] = 0;
+    int ans = INF;
+    q.emplace(0, i);
+    while (q.size()) {
+      auto [c, v] = q.top();
+      q.pop();
+      if (v != i && dist[v] < c)
+        continue;
+      for (edge u : to[v]) {
+        if (chmin(dist[u.to], dist[v] + u.w))
+          q.emplace(c + u.w, u.to);
+        if (u.to == i)
+          chmin(ans, c + u.w);
+      }
+    }
+    if (ans == INF)
+      ans = -1;
+    cout << ans << endl;
+  }
   return 0;
 }

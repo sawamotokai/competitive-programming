@@ -1,3 +1,4 @@
+#include <atcoder/all>
 #include <bits/stdc++.h>
 #include <cassert>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
@@ -24,6 +25,7 @@ template <class T> bool chmin(T &a, const T &b) {
   return false;
 }
 using namespace std;
+using namespace atcoder;
 using ll = long long;
 using vi = vector<int>;
 using vll = vector<ll>;
@@ -45,32 +47,29 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int n, k;
-string s;
-map<char, int> mp;
-char f(char a, char b) {
-  int p = mp[a] * mp[b];
-  if (p == 6)
-    return 'P';
-  else if (p == 10)
-    return 'R';
-  else if (p == 15)
-    return 'S';
-  else
-    return a;
-}
+ll op(ll a, ll b) { return a ^ b; }
+ll e() { return 0; }
 int main() {
-  cin >> n >> k >> s;
-  mp['R'] = 2;
-  mp['P'] = 3;
-  mp['S'] = 5;
-  rep(i, k) {
-    string t = s + s;
-    s = "";
-    for (int j = 0; j < t.size(); j += 2) {
-      s += f(t[j], t[j + 1]);
+  int n, q;
+  cin >> n >> q;
+  segtree<ll, op, e> seg(n);
+  vll A(n);
+  rep(i, n) {
+    ll a;
+    cin >> a;
+    seg.set(i, a);
+  }
+  rep(i, q) {
+    int t, a, b;
+    cin >> t >> a >> b;
+    a--;
+    b;
+    if (t == 1) {
+      ll now = seg.get(a) ^ b;
+      seg.set(a, now);
+    } else {
+      cout << seg.prod(a, b) << endl;
     }
   }
-  cout << s[0] << endl;
   return 0;
 }

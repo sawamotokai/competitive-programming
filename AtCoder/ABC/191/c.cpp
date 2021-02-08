@@ -41,36 +41,33 @@ const ll LINF = 1e18L + 1;
 const int INF = 1e9 + 1;
 int dx[] = {0, 1, 0, -1};
 int dy[] = {1, 0, -1, 0};
-int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
-int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
+int dxx[] = {1, 1, 0, -1, -1, -1, 0, 1};
+int dyy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int n, k;
-string s;
-map<char, int> mp;
-char f(char a, char b) {
-  int p = mp[a] * mp[b];
-  if (p == 6)
-    return 'P';
-  else if (p == 10)
-    return 'R';
-  else if (p == 15)
-    return 'S';
-  else
-    return a;
-}
+int H, W;
+string grid[101];
+int visited[101][101];
+
 int main() {
-  cin >> n >> k >> s;
-  mp['R'] = 2;
-  mp['P'] = 3;
-  mp['S'] = 5;
-  rep(i, k) {
-    string t = s + s;
-    s = "";
-    for (int j = 0; j < t.size(); j += 2) {
-      s += f(t[j], t[j + 1]);
+  cin >> H >> W;
+  rep(i, H) cin >> grid[i];
+  int ans = 0;
+  rep(i, H - 1) {
+    rep(j, W - 1) {
+      int cnt = 0;
+      if (grid[i][j] == '#')
+        cnt++;
+      if (grid[i + 1][j] == '#')
+        cnt++;
+      if (grid[i][j + 1] == '#')
+        cnt++;
+      if (grid[i + 1][j + 1] == '#')
+        cnt++;
+      if (cnt == 1 || cnt == 3)
+        ans++;
     }
   }
-  cout << s[0] << endl;
+  cout << ans << endl;
   return 0;
 }

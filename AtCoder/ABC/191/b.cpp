@@ -45,32 +45,20 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int n, k;
-string s;
-map<char, int> mp;
-char f(char a, char b) {
-  int p = mp[a] * mp[b];
-  if (p == 6)
-    return 'P';
-  else if (p == 10)
-    return 'R';
-  else if (p == 15)
-    return 'S';
-  else
-    return a;
-}
+int n, x;
+
 int main() {
-  cin >> n >> k >> s;
-  mp['R'] = 2;
-  mp['P'] = 3;
-  mp['S'] = 5;
-  rep(i, k) {
-    string t = s + s;
-    s = "";
-    for (int j = 0; j < t.size(); j += 2) {
-      s += f(t[j], t[j + 1]);
-    }
+  cin >> n >> x;
+  vi ans;
+  rep(i, n) {
+    int a;
+    cin >> a;
+    if (a == x)
+      continue;
+    ans.pb(a);
   }
-  cout << s[0] << endl;
+  rep(i, ans.size()) {
+    printf("%d%c\n", ans[i], i == ans.size() - 1 ? '\n' : ' ');
+  }
   return 0;
 }
