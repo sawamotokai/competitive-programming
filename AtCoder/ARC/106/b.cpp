@@ -45,56 +45,53 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
+vi to[200005];
+ll A[200005];
+ll B[200005];
+int visited[200005];
+
+bool bfs(int st) {
+  ll sumA = A[st];
+  ll sumB = B[st];
+  queue<int> q;
+  q.push(st);
+  visited[st] = true;
+  while (q.size()) {
+    int v = q.front();
+    q.pop();
+    for (int u : to[v]) {
+      if (visited[u])
+        continue;
+      visited[u] = true;
+      sumB += B[u];
+      sumA += A[u];
+      q.push(u);
+    }
+  }
+  if (sumA == sumB)
+    return true;
+  return false;
+}
+
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
+  int N, M;
+  cin >> N >> M;
+  rep(i, N) cin >> A[i];
+  rep(i, N) cin >> B[i];
+  rep(i, M) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
+  }
+  bool ok = true;
   rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
-    }
+    if (visited[i])
+      continue;
+    ok &= bfs(i);
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
-  }
+  ok();
   return 0;
 }

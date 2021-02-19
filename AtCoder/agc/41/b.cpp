@@ -45,56 +45,24 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
-  rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
-    }
+  int N, M, V, P;
+  cin >> N >> M >> V >> P;
+  vll A(N);
+  rep(i, N) cin >> A[i];
+  sort(all(A));
+  // 0, 1, 1, 2, 2, 3,
+  int ans = P;
+  rep(i, N - P) {
+    ll a = A[i];
+    int numSm = upper_bound(all(A), a) - A.begin();
+    int x = max(0, V - numSm);
+    int y = upper_bound(all(A), a + M) - A.begin();
+    y = N - y;
+    if (x + y > P)
+      continue;
+    ans++;
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
-  }
+  cout << ans << endl;
   return 0;
 }

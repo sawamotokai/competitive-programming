@@ -48,53 +48,22 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int N;
 int main() {
   cin >> N;
-  vll pl;
-  vll mi;
-  rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
+  int mx = 1000000;
+  int ans = INF;
+  rep2(i, N, mx) {
+    int change = i - N;
+    int sum = 0;
+    int t = i;
+    while (t) {
+      sum += t % 10;
+      t /= 10;
     }
+    while (change) {
+      sum += change % 10;
+      change /= 10;
+    }
+    chmin(ans, sum);
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
-  }
+  cout << ans << endl;
   return 0;
 }

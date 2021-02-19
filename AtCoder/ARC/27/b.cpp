@@ -44,57 +44,57 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+struct UnionFind {
+  vector<int> d;
+  UnionFind(int n = 0) : d(n, -1) {}
+  int find(int x) {
+    if (d[x] < 0)
+      return x;
+    return d[x] = find(d[x]);
+  }
+  bool unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x == y)
+      return false;
+    if (d[x] > d[y])
+      swap(x, y);
+    d[x] += d[y];
+    d[y] = x;
+    return true;
+  }
+  bool same(int x, int y) { return find(x) == find(y); }
+  int size(int x) { return -d[find(x)]; }
+  int numSets() {
+    int c = 0;
+    for (int num : d)
+      if (num < 0)
+        c++;
+    return c;
+  }
+};
 
-int N;
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
+  int N;
+  string s1, s2;
+  cin >> N >> s1 >> s2;
+  UnionFind uf(1 + max('Z', '9'));
+  auto isDig = [&](char c) {
+    rep(i, 10) if (uf.same(int('0' + i), c)) return true;
+    return false;
+  };
+  rep(i, N) { uf.unite(s1[i], s2[i]); }
+  ll ans = 1;
+  vi used(1 + max('Z', '9'));
   rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
-    }
+    if (used[uf.find(s1[i])] || isDig(s1[i]))
+      continue;
+    if (i == 0)
+      ans *= 9;
+    else
+      ans *= 10;
+    used[uf.find(s1[i])] = true;
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
-  }
+  printf("%lld\n", ans);
   return 0;
 }

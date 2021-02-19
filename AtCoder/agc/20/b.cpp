@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <cassert>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
@@ -45,56 +46,29 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
+int n;
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
-  rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
-    }
+  cin >> n;
+  vll a(n);
+  rep(i, n) cin >> a[i];
+  reverse(all(a));
+  if (a[0] != 2) {
+    cout << -1 << endl;
+    return 0;
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
+  ll mx = 3;
+  ll mn = 2;
+  rep2(i, 1, n - 1) {
+    ll nmin = (mn - 1 + a[i]) / a[i] * a[i];
+    ll nmax = (mx / a[i]) * a[i] + a[i] - 1;
+    // cout << nmin << " " << nmax << endl;
+    if (nmin > nmax || nmin > mx) {
+      cout << -1 << endl;
+      return 0;
     }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
+    mx = nmax;
+    mn = nmin;
   }
+  cout << mn << " " << mx << endl;
   return 0;
 }

@@ -45,56 +45,44 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
+  int N;
+  string S;
+  cin >> N >> S;
+  deque<char> q;
   rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
+    if (q.empty()) {
+      q.push_back(S[i]);
+      continue;
+    } else if (q.size() == 1) {
+      if (q.front() == S[i])
+        q.pop_front();
+      else
+        q.push_back(S[i]);
     } else {
-      pl.pb(a);
+      if (q.front() == S[i]) {
+        q.pop_front();
+      } else if (q.back() == S[i]) {
+        q.pop_back();
+      } else {
+        rep2(j, i + 1, N - 1) {
+          if (q.front() == S[j]) {
+            q.push_back(S[i]);
+            break;
+          }
+          if (q.back() == S[j]) {
+            q.push_front(S[i]);
+            break;
+          }
+          if (j == N - 1)
+            q.push_back(S[i]);
+          else
+            i++;
+          break;
+        }
+      }
     }
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
-  }
+  cout << q.size() << endl;
   return 0;
 }

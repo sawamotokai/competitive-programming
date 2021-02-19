@@ -45,56 +45,30 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-int N;
+int H, W;
 int main() {
-  cin >> N;
-  vll pl;
-  vll mi;
-  rep(i, N) {
-    int a;
-    cin >> a;
-    if (a < 0) {
-      mi.pb(a);
-    } else {
-      pl.pb(a);
-    }
+  cin >> H >> W;
+  ll ans = LINF;
+  rep2(i, 1, H - 1) {
+    vll rec(3);
+    rec[0] = W * i;
+    rec[1] = (W / 2 * (H - i));
+    rec[2] = ((W + 2 - 1) / 2 * (H - i));
+    sort(all(rec));
+    chmin(ans, rec[2] - rec[0]);
   }
-  if (pl.size() && mi.size()) {
-    ll ans = 0;
-    for (int num : pl)
-      ans += num;
-    for (int num : mi)
-      ans -= num;
-    cout << ans << endl;
-    rep(i, pl.size() - 1) {
-      cout << mi[0] << " " << pl[i] << endl;
-      mi[0] -= pl[i];
-    }
-    rep(i, mi.size()) {
-      cout << pl.back() << " " << mi[i] << endl;
-      pl.back() -= mi[i];
-    }
-  } else if (pl.size()) {
-    sort(all(pl));
-    ll ans = -pl[0];
-    assert(pl.size() == N);
-    rep2(i, 1, N - 1) ans += pl[i];
-    cout << ans << endl;
-    rep2(i, 1, N - 2) {
-      cout << pl[0] << " " << pl[i] << endl;
-      pl[0] -= pl[i];
-    }
-    cout << pl.back() << " " << pl[0] << endl;
-  } else {
-    sort(all(mi));
-    ll ans = mi.back();
-    assert(mi.size() == N);
-    rep(i, N - 1) { ans -= mi[i]; }
-    cout << ans << endl;
-    rep(i, N - 1) {
-      cout << mi.back() << " " << mi[i] << endl;
-      mi.back() -= mi[i];
-    }
+  rep2(i, 1, W - 1) {
+    vll rec(3);
+    rec[0] = H * i;
+    rec[1] = (H / 2 * (W - i));
+    rec[2] = ((H + 2 - 1) / 2 * (W - i));
+    sort(all(rec));
+    chmin(ans, rec[2] - rec[0]);
   }
+  ll vert = abs(H * (W / 3) - H * ((W + 3 - 1) / 3));
+  ll hori = abs(W * (H / 3) - W * ((H + 3 - 1) / 3));
+  chmin(ans, vert);
+  chmin(ans, hori);
+  cout << ans << endl;
   return 0;
 }
