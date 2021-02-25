@@ -45,46 +45,27 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll n;
-int f(ll now, bool taka) {
-  if (now > n)
-    return taka;
-  if (f(now * 2LL, !taka) and f(now * 2LL + 1LL, !taka) and !taka) {
-    return 1;
-  }
-  if (!f(now * 2LL, !taka) and !f(now * 2LL + 1LL, !taka) and taka) {
-    return 0;
-  }
-  return taka;
-}
-
+string s;
 int main() {
-  cin >> n;
-  int k = 1;
-  ll now = 1;
-  rep(i, 64) {
-    now <<= 1;
-    if (now <= n)
-      k++;
-    else
-      break;
-  }
-  ll x = 1;
-  rep(i, k) {
-    if ((i & 1) == (k & 1)) {
-      x *= 2;
-    } else {
-      x *= 2;
-      x++;
-    }
-    if (x > n) {
-      if (i & 1) {
-        puts("Takahashi");
-      } else {
-        puts("Aoki");
-      }
-      break;
+  cin >> s;
+  reverse(all(s));
+  int n = s.size();
+  char now = '.';
+  ll ans = 0;
+  vi cnt(26);
+  int last = -1;
+  rep(i, n - 2) {
+    cnt[s[i] - 'a']++;
+    if (s[i + 1] == s[i + 2] and s[i] != s[i + 1]) {
+      if (now == s[i + 1]) {
+        ans += i - last - cnt[s[i + 1] - 'a'];
+      } else
+        ans += i + 1 - cnt[s[i + 1] - 'a'];
+      last = i;
+      now = s[i + 1];
+      cnt = vi(26);
     }
   }
+  cout << ans << endl;
   return 0;
 }

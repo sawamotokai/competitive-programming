@@ -66,6 +66,14 @@ int main() {
   cin >> X >> M;
   reverse(all(X));
   n = X.size();
+  if (n == 1) {
+    if (stoi(X) > M) {
+      cout << 0 << endl;
+    } else {
+      cout << 1 << endl;
+    }
+    return 0;
+  }
   int d = 0;
   rep(i, X.size()) { chmax(d, X[i] - '0'); }
   d++;
@@ -92,7 +100,6 @@ int main() {
   }
   ll lo = rig;
   ll ans = hi - lo + 1;
-  // cout << hi << " " << lo << endl;
   if (f(d) == -1)
     ans = 0;
   cout << ans << endl;

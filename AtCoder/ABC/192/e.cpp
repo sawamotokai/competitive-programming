@@ -73,10 +73,7 @@ int main() {
       ll t = get<1>(nx);
       ll k = get<2>(nx);
       ll dep = (((k - d) % k) + k) % k + d;
-      // (((rest - pa.se) % k) + k) % k
-      // cout << "Arrived at " << d << " leave at " << dep << " " << k << endl;
       ll nd = dep + t;
-      // cout << nd << " " << t << endl;
       if (chmin(dp[u], nd)) {
         q.push({nd, u});
       }

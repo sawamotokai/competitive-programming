@@ -45,46 +45,29 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll n;
-int f(ll now, bool taka) {
-  if (now > n)
-    return taka;
-  if (f(now * 2LL, !taka) and f(now * 2LL + 1LL, !taka) and !taka) {
-    return 1;
-  }
-  if (!f(now * 2LL, !taka) and !f(now * 2LL + 1LL, !taka) and taka) {
-    return 0;
-  }
-  return taka;
-}
-
+string s;
 int main() {
-  cin >> n;
-  int k = 1;
-  ll now = 1;
-  rep(i, 64) {
-    now <<= 1;
-    if (now <= n)
-      k++;
-    else
-      break;
-  }
-  ll x = 1;
-  rep(i, k) {
-    if ((i & 1) == (k & 1)) {
-      x *= 2;
-    } else {
-      x *= 2;
-      x++;
-    }
-    if (x > n) {
-      if (i & 1) {
-        puts("Takahashi");
+  cin >> s;
+  int n = s.size();
+  int g = 0;
+  int ans = 0;
+  rep(i, n) {
+    if (s[i] == 'g') {
+      if (g) {
+        ans++;
+        g = 0;
       } else {
-        puts("Aoki");
+        g = 1;
       }
-      break;
+    } else {
+      if (!g) {
+        ans--;
+        g = 1;
+      } else {
+        g = 0;
+      }
     }
   }
+  cout << ans << endl;
   return 0;
 }
