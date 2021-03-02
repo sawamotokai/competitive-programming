@@ -1,7 +1,7 @@
 #!/bin/sh
 solution=${PWD}/$1
 brute=${PWD}/$2
-generator=~/Desktop/codingContests/randomTest/$3
+generator=${PWD}/$3
 
 if [ ! -f $solution ]; then
   echo $PWD
