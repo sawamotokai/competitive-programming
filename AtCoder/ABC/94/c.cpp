@@ -51,9 +51,25 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+#define nl '\n'
+#define endl '\n'
 
 int main() {
-  int h, w;
-  cin >> h >> w;
+  int n;
+  cin >> n;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  int sm1, sm2;
+  vi b = a;
+  sort(all(b));
+  sm1 = b[n / 2 - 1];
+  sm2 = b[n / 2];
+  rep(i, n) {
+    if (a[i] <= sm1) {
+      cout << sm2 << endl;
+    } else {
+      cout << sm1 << endl;
+    }
+  }
   return 0;
 }

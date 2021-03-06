@@ -53,7 +53,13 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
 int main() {
-  int h, w;
-  cin >> h >> w;
+  int n, k;
+  cin >> n >> k;
+  vi A(n);
+  rep(i, n) cin >> A[i];
+  int ans = (n - 1 + (k - 1) - 1) / (k - 1);
+  if (n <= k)
+    ans = 1;
+  cout << ans << endl;
   return 0;
 }

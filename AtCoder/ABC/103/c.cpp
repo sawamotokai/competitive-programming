@@ -52,8 +52,15 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
+ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
 int main() {
-  int h, w;
-  cin >> h >> w;
+  int n;
+  cin >> n;
+  vll a(n);
+  rep(i, n) cin >> a[i];
+  ll ans = 0;
+  rep(i, n) ans += a[i] - 1;
+  cout << ans << endl;
   return 0;
 }

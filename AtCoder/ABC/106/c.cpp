@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <cassert>
+#include <ostream>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
 #define rep2(i, a, b) for (ll i = a; i <= b; ++i)
 #define rep3(i, a, b) for (ll i = a; i >= b; --i)
@@ -53,7 +54,24 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
 int main() {
-  int h, w;
-  cin >> h >> w;
+  string s;
+  ll k;
+  cin >> s >> k;
+  if (s.size() >= k) {
+    rep(i, k) {
+      if (s[i] != '1') {
+        cout << s[i] << endl;
+        return 0;
+      }
+    }
+    cout << 1 << endl;
+    return 0;
+  }
+  rep(i, s.size()) {
+    if (s[i] != '1') {
+      cout << s[i] << endl;
+      return 0;
+    }
+  }
   return 0;
 }

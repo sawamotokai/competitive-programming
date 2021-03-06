@@ -52,8 +52,16 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+int dp[52][52][2555];
+// dp[i][j][k] := # of cases; seen i cards, used j cards, sum is k
+// dp[i][j][k] = (k+a[i])/(j-1) == a, k/j == a
 int main() {
-  int h, w;
-  cin >> h >> w;
+  int n;
+  cin >> n;
+  int a;
+  cin >> a;
+  vi x(n);
+  rep(I, n) cin >> x[I];
+
   return 0;
 }

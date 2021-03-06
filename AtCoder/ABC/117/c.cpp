@@ -32,10 +32,10 @@ using ii = pair<int, int>;
 using vvi = vector<vi>;
 using vii = vector<ii>;
 using vs = vector<string>;
-using gt = greater<ii>;
-using minq = priority_queue<ii, vector<ii>, gt>;
 using P = pair<ll, ll>;
 using vP = vector<P>;
+using gt = greater<ii>;
+using minq = priority_queue<ii, vector<ii>, gt>;
 template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
@@ -53,7 +53,18 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
 int main() {
-  int h, w;
-  cin >> h >> w;
+  int n, m;
+  cin >> n >> m;
+  vi X(m);
+  rep(i, m) cin >> X[i];
+  int jump = n - 1;
+  sort(all(X));
+  vi gaps(m - 1);
+  rep(i, m - 1) gaps[i] = X[i + 1] - X[i];
+  sort(all(gaps));
+  int ans = 0;
+  int walk = max(0, m - 1 - jump);
+  rep(i, walk) ans += gaps[i];
+  cout << ans << endl;
   return 0;
 }
