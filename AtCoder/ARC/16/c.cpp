@@ -53,24 +53,19 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+template <class T> void print(const initializer_list<T> &il) {
+  for (auto x : il) {
+    cout << x << " ";
+  }
+  cout << "\n";
+}
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n, m;
-  cin >> n >> m;
-  if (n == m and n == 1) {
-    cout << 1 << nl;
-    return 0;
-  }
-  if (n == 1) {
-    cout << m - 2 << endl;
-    return 0;
-  }
-  if (m == 1) {
-    cout << n - 2 << nl;
-    return 0;
-  }
-  cout << (m - 2) * (n - 2) << nl;
+  int x = 3;
+  int y = 3;
+  print({x, y, x});
+  print({"hey", "this", "is", "Kai"});
   return 0;
 }

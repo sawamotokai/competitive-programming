@@ -42,6 +42,12 @@ template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
 }
+template <class T> void print(const initializer_list<T> &il) {
+  for (auto x : il) {
+    cout << x << " ";
+  }
+  cout << "\n";
+}
 inline void priv(vi a) {
   rep(i, (int)a.size())
       printf("%d%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
@@ -54,23 +60,71 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+struct edge {
+  int to, id;
+  edge(int to, int id) : to(to), id(id) {}
+};
+struct UnionFind {
+  vector<int> d;
+  UnionFind(int n = 0) : d(n, -1) {}
+  int find(int x) {
+    if (d[x] < 0)
+      return x;
+    return d[x] = find(d[x]);
+  }
+  bool unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x == y)
+      return false;
+    if (d[x] > d[y])
+      swap(x, y);
+    d[x] += d[y];
+    d[y] = x;
+    return true;
+  }
+  bool same(int x, int y) { return find(x) == find(y); }
+  int size(int x) { return -d[find(x)]; }
+  int numSets() {
+    int c = 0;
+    for (int num : d)
+      if (num < 0)
+        c++;
+    return c;
+  }
+};
+
+vector<edge> to[200005];
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n, m;
-  cin >> n >> m;
-  if (n == m and n == 1) {
-    cout << 1 << nl;
-    return 0;
+  int n, m, s;
+  cin >> n >> m >> s;
+  UnionFind uf(n + 1);
+  s--;
+  rep(i, m) {
+    int a, b;
+    cin >> a >> b;
+    a--, b--;
+    to[a].eb(b, i);
+    to[b].eb(a, i);
   }
-  if (n == 1) {
-    cout << m - 2 << endl;
-    return 0;
+  auto connect = [&](int u) {
+    for (edge e : to[u]) {
+      if (e.to > u) {
+        uf.unite(e.to, u);
+      }
+    }
+  };
+  vi ans;
+  rep3(i, n - 1, 0) {
+    connect(i);
+    if (uf.same(i, s)) {
+      ans.pb(i + 1);
+    }
   }
-  if (m == 1) {
-    cout << n - 2 << nl;
-    return 0;
-  }
-  cout << (m - 2) * (n - 2) << nl;
+  reverse(all(ans));
+  rep(i, (int)ans.size()) { cout << ans[i] << nl; }
   return 0;
 }

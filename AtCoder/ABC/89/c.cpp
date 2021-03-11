@@ -57,20 +57,31 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n, m;
-  cin >> n >> m;
-  if (n == m and n == 1) {
-    cout << 1 << nl;
-    return 0;
+  int n;
+  cin >> n;
+  vs ns(n);
+  rep(i, n) cin >> ns[i];
+  vi cnt(26);
+  rep(i, n) cnt[ns[i][0] - 'A']++;
+  vi mp(5);
+  mp[0] = cnt['M' - 'A'];
+  mp[1] = cnt['A' - 'A'];
+  mp[2] = cnt['R' - 'A'];
+  mp[3] = cnt['C' - 'A'];
+  mp[4] = cnt['H' - 'A'];
+  ll ans = 0;
+  rep(i, 1 << 5) {
+    ll now = 1;
+    int c = 0;
+    rep(j, 5) {
+      if ((i >> j) & 1) {
+        c++;
+        now *= mp[j];
+      }
+    }
+    if (c == 3)
+      ans += now;
   }
-  if (n == 1) {
-    cout << m - 2 << endl;
-    return 0;
-  }
-  if (m == 1) {
-    cout << n - 2 << nl;
-    return 0;
-  }
-  cout << (m - 2) * (n - 2) << nl;
+  cout << ans << nl;
   return 0;
 }

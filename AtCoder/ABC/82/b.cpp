@@ -42,6 +42,12 @@ template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
 }
+template <class T> void print(const initializer_list<T> &il) {
+  for (auto x : il) {
+    cout << x << " ";
+  }
+  cout << "\n";
+}
 inline void priv(vi a) {
   rep(i, (int)a.size())
       printf("%d%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
@@ -57,20 +63,15 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n, m;
-  cin >> n >> m;
-  if (n == m and n == 1) {
-    cout << 1 << nl;
-    return 0;
+  string s, t;
+  cin >> s >> t;
+  sort(all(s));
+  sort(t.rbegin(), t.rend());
+  if (s < t) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
   }
-  if (n == 1) {
-    cout << m - 2 << endl;
-    return 0;
-  }
-  if (m == 1) {
-    cout << n - 2 << nl;
-    return 0;
-  }
-  cout << (m - 2) * (n - 2) << nl;
+
   return 0;
 }

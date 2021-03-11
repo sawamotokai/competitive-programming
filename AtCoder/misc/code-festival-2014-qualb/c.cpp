@@ -34,13 +34,19 @@ using ii = pair<int, int>;
 using vvi = vector<vi>;
 using vii = vector<ii>;
 using vs = vector<string>;
-using gt = greater<ii>;
-using minq = priority_queue<ii, vector<ii>, gt>;
 using P = pair<ll, ll>;
+using gt = greater<P>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
+}
+template <class T> void print(const initializer_list<T> &il) {
+  for (auto x : il) {
+    cout << x << " ";
+  }
+  cout << "\n";
 }
 inline void priv(vi a) {
   rep(i, (int)a.size())
@@ -57,20 +63,45 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n, m;
-  cin >> n >> m;
-  if (n == m and n == 1) {
-    cout << 1 << nl;
+  string s1, s2, s3;
+  cin >> s1 >> s2 >> s3;
+  vi cnt1(26);
+  vi cnt2(26);
+  vi cnt3(26);
+  int n = s1.size();
+  rep(i, n) {
+    cnt1[s1[i] - 'A']++;
+    cnt2[s2[i] - 'A']++;
+    cnt3[s3[i] - 'A']++;
+  }
+  int sum = 0;
+  rep(i, 26) {
+    char c = 'A' + i;
+    int need = max<int>(0, cnt3[i] - cnt1[i]);
+    if (need > cnt2[i]) {
+      puts("NO");
+      return 0;
+    }
+    sum += need;
+  }
+  if (sum > n / 2) {
+    puts("NO");
     return 0;
   }
-  if (n == 1) {
-    cout << m - 2 << endl;
+  sum = 0;
+  rep(i, 26) {
+    char c = 'A' + i;
+    int need = max<int>(0, cnt3[i] - cnt2[i]);
+    if (need > cnt1[i]) {
+      puts("NO");
+      return 0;
+    }
+    sum += need;
+  }
+  if (sum > n / 2) {
+    puts("NO");
     return 0;
   }
-  if (m == 1) {
-    cout << n - 2 << nl;
-    return 0;
-  }
-  cout << (m - 2) * (n - 2) << nl;
+  puts("YES");
   return 0;
 }
