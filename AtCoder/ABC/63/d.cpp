@@ -7,6 +7,8 @@
 #define eb emplace_back
 #define fi first
 #define se second
+#define nl '\n'
+#define endl '\n'
 #define all(c) begin(c), end(c)
 #define ok() puts(ok ? "Yes" : "No");
 template <class T> bool chmax(T &a, const T &b) {
@@ -32,13 +34,19 @@ using ii = pair<int, int>;
 using vvi = vector<vi>;
 using vii = vector<ii>;
 using vs = vector<string>;
-using gt = greater<ii>;
-using minq = priority_queue<ii, vector<ii>, gt>;
 using P = pair<ll, ll>;
+using gt = greater<P>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 template <class T> void takeUnique(vector<T> &v) {
   auto last = std::unique(v.begin(), v.end());
   v.erase(last, v.end());
+}
+template <class T> void print(const initializer_list<T> &il) {
+  for (auto x : il) {
+    cout << x << " ";
+  }
+  cout << "\n";
 }
 inline void priv(vi a) {
   rep(i, (int)a.size())
@@ -52,33 +60,36 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll dp[52][52][2555];
-// dp[i][j][k] := # of cases; seen i cards, used j cards, sum is k
 int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(NULL);
   int n;
-  cin >> n;
-  int a;
-  cin >> a;
-  vi x(n);
-  rep(I, n) cin >> x[I];
-  dp[0][0][0] = 1;
-  rep(i, n) {
-    rep(j, n + 1) {
-      rep(k, 2505) {
-        dp[i + 1][j][k] += dp[i][j][k];
-        if (k - x[i] >= 0 and j) {
-          dp[i + 1][j][k] += dp[i][j - 1][k - x[i]];
-        }
-      }
-    }
-  }
+  ll a, b;
+  cin >> n >> a >> b;
+  vll h(n);
+  rep(i, n) cin >> h[i];
+  ll d = a - b;
   ll ans = 0;
-  rep(i, n + 1) {
-    rep(j, 2505) {
-      if (j == i * a)
-        ans += dp[n][i][j];
+  ll lo = 0;
+  ll hi = INF;
+
+  auto f = [&](int k) {
+    ll need = 0;
+    vll h2(n);
+    rep(i, n) {
+      h2[i] = max<ll>(0, h[i] - b * k);
+      need += (h2[i] + d - 1) / d;
+    }
+    return need <= k;
+  };
+  rep(i, 100) {
+    ll mid = (lo + hi) / 2;
+    if (f(mid)) {
+      hi = mid;
+    } else {
+      lo = mid;
     }
   }
-  cout << ans - 1 << endl;
+  cout << hi << endl;
   return 0;
 }
