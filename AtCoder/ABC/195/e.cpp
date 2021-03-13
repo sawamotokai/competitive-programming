@@ -59,37 +59,54 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+
+int n;
+string s, x;
+int f(int idx) {
+  if (x[idx] == 'A') {
+    if (idx == 0) {
+      if (s[idx] == '7') {
+        return 0;
+      } else {
+        return (s[idx] - '0') % 7;
+      }
+    }
+    int ret = f(idx - 1);
+    if (ret == 0) {
+      if (s[idx] == '7' || s[idx] == '0') {
+        return 0;
+      }
+      return (ret * 10 + s[idx] - '0') % 7;
+    } else {
+      return (ret * 10 + s[idx] - '0') % 7;
+    }
+  } else {
+    if (idx == 0) {
+      return 0;
+    }
+    int ret = f(idx - 1);
+    if (ret == 0) {
+      return 0;
+    } else {
+      int now = s[idx] - '0';
+      if (now == ret) {
+        return 0;
+      } else {
+        return (ret * 10) % 7;
+      }
+    }
+  }
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n;
-  cin >> n;
-  vi T(n);
-  vi A(n);
-  rep(i, n) cin >> T[i] >> A[i];
-  ll nowT = T[0];
-  ll nowA = A[0];
-  rep2(i, 1, n - 1) {
-    ll t = T[i];
-    ll a = A[i];
-    if (t > a) {
-      // find the smallest a
-      ll na = (nowA + a - 1) / a * a;
-      ll nt = t * na / a;
-      ll k = (nowT + nt - 1) / nt;
-      nowA = na * k;
-      nowT = nt * k;
-    } else {
-      ll nt = (nowT + t - 1) / t * t;
-      ll na = a * nt / t;
-      ll k = (nowA + na - 1) / na;
-      nowA = na * k;
-      nowT = nt * k;
-    }
-    print({nowA, nowT});
+  cin >> n >> s >> x;
+  int res = f(n - 1);
+  if (res) {
+    puts("Aoki");
+  } else {
+    puts("Takahashi");
   }
-  cout << nowA + nowT << endl;
   return 0;
 }

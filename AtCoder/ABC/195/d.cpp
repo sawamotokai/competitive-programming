@@ -59,37 +59,47 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n;
-  cin >> n;
-  vi T(n);
-  vi A(n);
-  rep(i, n) cin >> T[i] >> A[i];
-  ll nowT = T[0];
-  ll nowA = A[0];
-  rep2(i, 1, n - 1) {
-    ll t = T[i];
-    ll a = A[i];
-    if (t > a) {
-      // find the smallest a
-      ll na = (nowA + a - 1) / a * a;
-      ll nt = t * na / a;
-      ll k = (nowT + nt - 1) / nt;
-      nowA = na * k;
-      nowT = nt * k;
-    } else {
-      ll nt = (nowT + t - 1) / t * t;
-      ll na = a * nt / t;
-      ll k = (nowA + na - 1) / na;
-      nowA = na * k;
-      nowT = nt * k;
+  int N, M, Q;
+  cin >> N >> M >> Q;
+  vi W(N);
+  vi V(N);
+  vii I(N);
+  vi X(M);
+  rep(i, N) cin >> I[i].fi >> I[i].se;
+  rep(i, M) cin >> X[i];
+  sort(all(I));
+  while (Q--) {
+    int L, R;
+    cin >> L >> R;
+    // dp[i][j][k]:=max value s.t., seen i items, j th box has k space
+    L--, R--;
+    vi B;
+    rep(i, M) {
+      if (i <= R and i >= L)
+        continue;
+      B.pb(X[i]);
     }
-    print({nowA, nowT});
+    sort(all(B));
+    int p = 0;
+    priority_queue<int> valq;
+    ll ans = 0;
+    rep(i, B.size()) {
+      while (p < N and I[p].fi <= B[i]) {
+        valq.push(I[p].se);
+        p++;
+      }
+      if (valq.empty()) {
+        continue;
+      }
+      int v = valq.top();
+      valq.pop();
+      ans += v;
+    }
+    cout << ans << endl;
   }
-  cout << nowA + nowT << endl;
   return 0;
 }

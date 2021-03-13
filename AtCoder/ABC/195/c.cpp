@@ -59,37 +59,24 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n;
+  ll n;
   cin >> n;
-  vi T(n);
-  vi A(n);
-  rep(i, n) cin >> T[i] >> A[i];
-  ll nowT = T[0];
-  ll nowA = A[0];
-  rep2(i, 1, n - 1) {
-    ll t = T[i];
-    ll a = A[i];
-    if (t > a) {
-      // find the smallest a
-      ll na = (nowA + a - 1) / a * a;
-      ll nt = t * na / a;
-      ll k = (nowT + nt - 1) / nt;
-      nowA = na * k;
-      nowT = nt * k;
-    } else {
-      ll nt = (nowT + t - 1) / t * t;
-      ll na = a * nt / t;
-      ll k = (nowA + na - 1) / na;
-      nowA = na * k;
-      nowT = nt * k;
+  ll keta = 1;
+  ll ans = 0;
+  rep(i, 15) {
+    keta *= 10;
+    if (i % 3 == 2) {
+      // ll now = n - (n % keta);
+      ll now = max(n - keta, 0ll);
+      if (n >= keta)
+        now++;
+      ans += now;
     }
-    print({nowA, nowT});
   }
-  cout << nowA + nowT << endl;
+  cout << ans << nl;
   return 0;
 }
