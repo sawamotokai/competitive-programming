@@ -63,18 +63,20 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
-  cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
+  int m, p, n;
+  cin >> m >> p >> n;
+  int nt = m;
+  int adjust = 1;
+  int ans = 0;
+  rep(i, n) {
+    int w;
+    cin >> w;
+    if (w >= nt) {
+      ans++;
     }
+    int d = nt - w;
+    double add = 1. * d * p / 100;
+    nt = ceil(m + add);
   }
   cout << ans << nl;
   return 0;

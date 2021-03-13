@@ -63,19 +63,83 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
-  cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
+  int W, H, D;
+  cin >> W >> H >> D;
+  vs front(H);
+  vs right(H);
+  vs top(D);
+  rep(i, H) cin >> front[i];
+  rep(i, H) cin >> right[i];
+  rep(i, D) cin >> top[i];
+  // check depth
+  rep(i, D) {
+    int any = 0;
+    rep(j, H) if (right[j][i] == '#') any = 1;
+    if (any) {
+      int any2 = 0;
+      rep(j, W) if (top[D - i - 1][j] == '#') any2 = 1;
+      if (!any2) {
+        puts("invalid");
+        return 0;
+      }
     }
   }
-  cout << ans << nl;
+  // check height
+  rep(i, H) {
+    int any = 0;
+    rep(j, W) if (front[i][j] == '#') any = 1;
+    if (any) {
+      int any2 = 0;
+      rep(j, D) if (right[i][j] == '#') any2 = 1;
+      if (!any2) {
+        puts("invalid");
+        return 0;
+      }
+    }
+  }
+  // check iwdth
+  rep(i, W) {
+    int any = 0;
+    rep(j, H) if (front[j][i] == '#') any = 1;
+    if (any) {
+      int any2 = 0;
+      rep(j, D) if (top[j][i] == '#') any2 = 1;
+      if (!any2) {
+        puts("invalid");
+        return 0;
+      }
+    }
+  }
+  int ans = 0;
+  rep(i, H) {
+    rep(j, W) {
+      rep(k, D) {
+        if (front[i][j] == '#' and right[i][D - k - 1] == '#' and
+            top[k][j] == '#') {
+          ans++;
+        }
+      }
+    }
+  }
+  int mx = 0;
+  int cnt = 0;
+  rep(i, H) {
+    rep(j, W) {
+      if (front[i][j] == '#')
+        cnt++;
+    }
+  }
+  chmax(mx, cnt);
+  cnt = 0;
+  rep(i, H) rep(k, D) if (right[i][k] == '#') cnt++;
+  chmax(mx, cnt);
+  cnt = 0;
+  rep(k, D) rep(j, W) if (top[k][j] == '#') cnt++;
+  chmax(mx, cnt);
+  if (ans < mx) {
+    puts("invalid");
+  } else {
+    cout << ans << nl;
+  }
   return 0;
 }

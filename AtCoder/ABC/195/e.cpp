@@ -62,39 +62,27 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 
 int n;
 string s, x;
-int f(int idx) {
-  if (x[idx] == 'A') {
-    if (idx == 0) {
-      if (s[idx] == '7') {
-        return 0;
-      } else {
-        return (s[idx] - '0') % 7;
-      }
+int dp[200005][8];
+int flag[200005][8];
+
+int f(int i, int mod) {
+  if (flag[i][mod])
+    return dp[i][mod];
+  flag[i][mod] = 1;
+  if (x[i] == 'A') {
+    if (i == 0) {
+      return dp[i][mod] = s[i] == '7' || s[i] == '0';
     }
-    int ret = f(idx - 1);
-    if (ret == 0) {
-      if (s[idx] == '7' || s[idx] == '0') {
-        return 0;
-      }
-      return (ret * 10 + s[idx] - '0') % 7;
-    } else {
-      return (ret * 10 + s[idx] - '0') % 7;
-    }
+    int pm = (2 * (s[i] - '0') % 7 + 7) % 7;
+    int res = f(i - 1, pm) and f(i - 1, 0);
+    return dp[i][mod] = res;
   } else {
-    if (idx == 0) {
-      return 0;
+    if (i == 0) {
+      return dp[i][mod] = 1;
     }
-    int ret = f(idx - 1);
-    if (ret == 0) {
-      return 0;
-    } else {
-      int now = s[idx] - '0';
-      if (now == ret) {
-        return 0;
-      } else {
-        return (ret * 10) % 7;
-      }
-    }
+    int pm = (2 * (s[i] - '0') % 7 + 7) % 7;
+    int res = f(i - 1, pm) or f(i - 1, 0);
+    return dp[i][mod] = res;
   }
 }
 
@@ -102,11 +90,11 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cin >> n >> s >> x;
-  int res = f(n - 1);
+  int res = f(n - 1, 0);
   if (res) {
-    puts("Aoki");
-  } else {
     puts("Takahashi");
+  } else {
+    puts("Aoki");
   }
   return 0;
 }

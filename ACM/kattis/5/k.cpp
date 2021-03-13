@@ -48,7 +48,7 @@ template <class T> void print(const initializer_list<T> &il) {
   }
   cout << "\n";
 }
-inline void priv(vi a) {
+inline void priv(vll a) {
   rep(i, (int)a.size())
       printf("%d%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
 }
@@ -60,22 +60,45 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+vector<ll> ans;
+void f(ll lo, ll hi) {
+  if (lo + 1 == hi) {
+    ans.pb(lo);
+    return;
+  }
+  ll mid = (lo + hi) / 2;
+  cout << "q"
+       << " " << lo << " " << mid - 1 << flush;
+  ll left;
+  cin >> left;
+  cout << "q"
+       << " " << mid << " " << hi - 1 << flush;
+  ll right;
+  cin >> right;
+  if (left) {
+    if (left == mid - lo) {
+      rep2(i, left, mid - 1) ans.pb(i);
+      return;
+    }
+    f(lo, mid);
+  } else {
+    if (right == hi - mid) {
+      rep2(i, mid, right - 1) ans.pb(i);
+      return;
+    }
+    f(mid, hi);
+  }
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
-  cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
-    }
-  }
-  cout << ans << nl;
+  ll lo = 0;
+  ll hi = (1 << 63);
+  f(lo, hi);
+  sort(all(ans));
+  cout << "a"
+       << " " << ans.size() << " ";
+  priv(ans);
   return 0;
 }

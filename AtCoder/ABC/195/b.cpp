@@ -68,7 +68,7 @@ int main() {
   cin >> a >> b >> w;
   w *= 1000;
   double mx, mn;
-  mn = double(w) / b;
+  mn = 1. * w / b;
   mx = 1. * w / a;
   int imn = ceil(double(mn));
   int ima = mx / 1;

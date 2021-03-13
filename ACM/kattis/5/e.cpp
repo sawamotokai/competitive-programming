@@ -63,17 +63,18 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
+  int n;
   cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
+  vvi grid(n, vi(n));
+  rep(i, n) { rep(j, n) cin >> grid[i][j]; }
+  int ans = 0;
+  rep(i, n) {
+    rep2(j, i + 1, n - 1) {
+      rep2(k, j + 1, n - 1) {
+        if (grid[i][j] and grid[i][k] and grid[j][k]) {
+          ans++;
+        }
+      }
     }
   }
   cout << ans << nl;

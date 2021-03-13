@@ -59,23 +59,29 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+int dp[1005][2][2];
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
+  rep(i, 1005) rep(j, 2) rep(k, 2) dp[i][j][k] = -INF;
+  int n;
   cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
-    }
+  vi s(n);
+  rep(i, n) cin >> s[i];
+  dp[0][0][0] = 0;
+  rep(i, n) {
+    chmax(dp[i + 1][1][0], dp[i][0][0] - s[i]);
+    chmax(dp[i + 1][0][1], dp[i][1][0] + s[i]);
+    chmax(dp[i + 1][1][0], dp[i][1][0]);
+    chmax(dp[i + 1][0][0], dp[i][0][0]);
+    chmax(dp[i + 1][0][0], dp[i][0][1]);
   }
+  int ans = dp[n][1][0] + s[n - 1];
+  chmax(ans, dp[n][1][1] + s[n - 1]);
+  chmax(ans, dp[n][0][0]);
+  chmax(ans, dp[n][0][1]);
   cout << ans << nl;
+  // rep(i, n) print({dp[i][0][0], dp[i][0][1], dp[i][1][0], dp[i][1][1]});
   return 0;
 }

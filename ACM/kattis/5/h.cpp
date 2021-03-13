@@ -59,23 +59,95 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+int vis[11][11];
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll n;
-  cin >> n;
-  ll keta = 1;
-  ll ans = 0;
-  rep(i, 15) {
-    keta *= 10;
-    if (i % 3 == 2) {
-      ll now = max(n - keta, 0ll);
-      if (n >= keta)
-        now++;
-      ans += now;
+  vvi gn(10, vi(10));
+  vs gs(10);
+  rep(i, 10) rep(j, 10) {
+    char c;
+    cin >> c;
+    gn[i][j] = c - '0';
+  }
+  rep(i, 10) cin >> gs[i];
+  bool ok = 1;
+  // check row
+  rep(i, 10) {
+    int cnt = 0;
+    rep(j, 10) {
+      if (gs[i][j] == '*')
+        cnt++;
+    }
+    if (cnt != 2)
+      ok = 0;
+  }
+  // columns
+  rep(j, 10) {
+    int cnt = 0;
+    rep(i, 10) {
+      if (gs[i][j] == '*')
+        cnt++;
+    }
+    if (cnt != 2)
+      ok = 0;
+  }
+  // adjacent
+  auto adjacent = [&](int i, int j) {
+    rep(k, 8) {
+      int ni = i + dyy[k];
+      int nj = j + dxx[k];
+      if (ni < 0 or ni >= 10 or nj < 0 or nj >= 10)
+        continue;
+      if (gs[ni][nj] == '*')
+        return 1;
+    }
+    return 0;
+  };
+  rep(i, 10) {
+    rep(j, 10) {
+      if (gs[i][j] == '*' and adjacent(i, j))
+        ok = 0;
     }
   }
-  cout << ans << nl;
+  // regions
+  rep(num, 10) {
+    queue<ii> q;
+    [&] {
+      rep(i, 10) {
+        rep(j, 10) {
+          if (gn[i][j] == num) {
+            q.emplace(i, j);
+            vis[i][j] = 1;
+            return;
+          }
+        }
+      }
+    }();
+    assert(q.size());
+    int cnt = 0;
+    while (q.size()) {
+      auto [i, j] = q.front();
+      if (gs[i][j] == '*')
+        cnt++;
+      q.pop();
+      rep(k, 4) {
+        int ni = i + dy[k];
+        int nj = j + dx[k];
+        if (ni < 0 or ni >= 10 or nj < 0 or nj >= 10 or gn[ni][nj] != num or
+            vis[ni][nj])
+          continue;
+        q.emplace(ni, nj);
+        vis[ni][nj] = 1;
+      }
+    }
+    if (cnt != 2)
+      ok = 0;
+  }
+  if (ok)
+    cout << "valid" << nl;
+  else
+    cout << "invalid" << nl;
   return 0;
 }
