@@ -60,20 +60,36 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+double dp[101][101][101];
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
+  int n;
+  cin >> n;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  int one = 0;
+  int two = 0;
+  int three = 0;
+  rep(i, n) {
+    three += a[i] == 0;
+    two += a[i] == 1;
+    one += a[i] == 2;
+  }
+  dp[0][0][0] = 0;
+  rep(d1, n) {
+    rep(d2, n) {
+      rep(d3, n) {
+        dp[d1][d2][d3] = 1. * n / (d1 + d2 + d3);
+        if (d1)
+          dp[d1][d2][d3] += dp[d1 + 1][d2][d3] * d1 / (d1 + d2 + d3);
+        if (d1)
+          dp[d1][d2][d3] += dp[d1 - 1][d2 + 1][d3] * d2 / (d1 + d2 + d3);
+        if (d2)
+          dp[d1][d2][d3] += dp[d1][d2 - 1][d3 + 1] * d3 / (d1 + d2 + d3);
+      }
     }
   }
-  cout << cnt << nl;
+  cout << dp[one][two][three] << endl;
   return 0;
 }

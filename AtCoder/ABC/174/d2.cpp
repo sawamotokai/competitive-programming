@@ -63,17 +63,15 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
+  int n;
+  string s;
+  cin >> n >> s;
+  int ans = INF;
   int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
-    }
-  }
-  cout << cnt << nl;
+  rep(i, n) if (s[i] == 'R') cnt++;
+  int cnt2 = 0;
+  rep(i, cnt) if (s[i] == 'R') cnt2++;
+  chmin(ans, cnt - cnt2);
+  cout << ans << nl;
   return 0;
 }

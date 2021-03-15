@@ -63,17 +63,26 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
+  int n;
+  cin >> n;
+  vi p(n);
+  rep(i, n) cin >> p[i];
+  vi ids;
+  rep(i, n) {
+    if (p[i] == i + 1)
+      ids.pb(i);
+  }
+  int ans = ids.size();
+  if (ans == 0) {
+    cout << 0 << endl;
+    return 0;
+  }
+  rep(i, ids.size() - 1) {
+    if (ids[i] + 1 == ids.at(i + 1)) {
+      i++;
+      ans--;
     }
   }
-  cout << cnt << nl;
+  cout << ans << endl;
   return 0;
 }

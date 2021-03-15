@@ -66,6 +66,7 @@ int dp[200005][8];
 int flag[200005][8];
 
 int f(int i, int mod) {
+  print({i, mod});
   if (flag[i][mod])
     return dp[i][mod];
   flag[i][mod] = 1;
@@ -96,5 +97,6 @@ int main() {
   } else {
     puts("Aoki");
   }
+  rep(i, n) rep(j, 7) cout << dp[i][j] << nl;
   return 0;
 }

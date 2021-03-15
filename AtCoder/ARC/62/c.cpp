@@ -69,27 +69,15 @@ int main() {
   vi T(n);
   vi A(n);
   rep(i, n) cin >> T[i] >> A[i];
-  ll nowT = T[0];
-  ll nowA = A[0];
+  ll t = T[0];
+  ll a = A[0];
   rep2(i, 1, n - 1) {
-    ll t = T[i];
-    ll a = A[i];
-    if (t > a) {
-      // find the smallest a
-      ll na = (nowA + a - 1) / a * a;
-      ll nt = t * na / a;
-      ll k = (nowT + nt - 1) / nt;
-      nowA = na * k;
-      nowT = nt * k;
-    } else {
-      ll nt = (nowT + t - 1) / t * t;
-      ll na = a * nt / t;
-      ll k = (nowA + na - 1) / na;
-      nowA = na * k;
-      nowT = nt * k;
-    }
-    print({nowA, nowT});
+    ll tk = (T[i] + t - 1) / T[i];
+    ll ak = (A[i] + a - 1) / A[i];
+    ll k = max(tk, ak);
+    t = T[i] * k;
+    a = A[i] * k;
   }
-  cout << nowA + nowT << endl;
+  cout << t + a << endl;
   return 0;
 }

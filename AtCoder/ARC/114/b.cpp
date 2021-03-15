@@ -60,20 +60,62 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
+struct UnionFind {
+  vector<int> d;
+  UnionFind(int n = 0) : d(n, -1) {}
+  int find(int x) {
+    if (d[x] < 0)
+      return x;
+    return d[x] = find(d[x]);
+  }
+  bool unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x == y)
+      return false;
+    if (d[x] > d[y])
+      swap(x, y);
+    d[x] += d[y];
+    d[y] = x;
+    return true;
+  }
+  bool same(int x, int y) { return find(x) == find(y); }
+  int size(int x) { return -d[find(x)]; }
+  int numSets() {
+    set<int> s;
+    for (int num : d)
+      if (num >= 0)
+        s.insert(num);
+    return s.size();
+  }
+};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
+  int n;
+  cin >> n;
+  vll f(n);
+  rep(i, n) {
+    cin >> f[i];
+    f[i]--;
+  }
+  UnionFind uf(n + 1);
+  vi vis(n + 1);
   int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
+  rep(i, n) {
+    int nx = i;
+    while (!vis[nx]) {
+      if (uf.unite(i, f[nx]))
+        cnt++;
+      vis[nx] = 1;
+      nx = f[nx];
     }
   }
-  cout << cnt << nl;
+  ll ans = 1;
+  set<int> st;
+  rep(i, n) { st.insert(uf.find(i)); }
+  ans <<= st.size();
+  ans--;
+  cout << ans << nl;
   return 0;
 }

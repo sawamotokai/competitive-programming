@@ -63,17 +63,17 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
-    }
+  int c;
+  cin >> c;
+  vvi b(c, vi(3));
+  rep(i, c) cin >> b[i][0] >> b[i][1] >> b[i][2];
+  rep(i, c) sort(all(b[i]));
+  ll ans = 1;
+  rep(i, 3) {
+    int now = 0;
+    rep(j, c) { chmax(now, b[j][i]); }
+    ans *= now;
   }
-  cout << cnt << nl;
+  cout << ans << nl;
   return 0;
 }

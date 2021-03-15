@@ -59,21 +59,42 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-
+vi to[200005];
+int dist[200005];
+int vis[200005];
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
+  int n, m;
+  cin >> n >> m;
+  rep(i, n) dist[i] = INF;
+  dist[0] = 0;
+  rep(i, m) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
+  }
+  queue<int> q;
+  q.emplace(0);
+  vis[0] = 1;
+  while (q.size()) {
+    int v = q.front();
+    q.pop();
+    for (int u : to[v]) {
+      if (vis[u])
         continue;
-      cnt++;
+      chmin(dist[u], dist[v] + 1);
+      q.push(u);
+      vis[u] = 1;
     }
   }
-  cout << cnt << nl;
+  if (dist[n - 1] == 2) {
+    puts("POSSIBLE");
+  } else {
+    puts("IMPOSSIBLE");
+  }
   return 0;
 }

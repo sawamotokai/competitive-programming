@@ -63,17 +63,31 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
-    }
+  string s;
+  cin >> s;
+  int n = s.size();
+  vi cnt(26);
+  rep(i, n) cnt[s[i] - 'a']++;
+  char c = '.';
+  rep(i, 26) if (cnt[i] == 0) {
+    c = char('a' + i);
+    break;
   }
-  cout << cnt << nl;
+  if (c != '.') {
+    cout << s << c << nl;
+    return 0;
+  }
+  set<char> st;
+  rep3(i, n - 1, 0) {
+    for (char c : st) {
+      if (s[i] < c) {
+        rep(j, i) cout << s[j];
+        cout << c << nl;
+        return 0;
+      }
+    }
+    st.insert(s[i]);
+  }
+  cout << -1 << nl;
   return 0;
 }

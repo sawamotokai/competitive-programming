@@ -63,17 +63,17 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
-    }
+  int n;
+  cin >> n;
+  vi A(n);
+  rep(i, n) cin >> A[i];
+  set<int> st;
+  int ans = 0;
+  rep(i, n) {
+    if (st.count(A[i]))
+      ans++;
+    st.insert(A[i]);
   }
-  cout << cnt << nl;
+  cout << ans << nl;
   return 0;
 }

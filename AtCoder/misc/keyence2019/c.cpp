@@ -63,17 +63,31 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int k, s;
-  cin >> k >> s;
-  int cnt = 0;
-  rep2(x, 0, k) {
-    rep2(y, 0, k) {
-      int z = s - x - y;
-      if (z < 0 or z > k)
-        continue;
-      cnt++;
-    }
+  int n;
+  cin >> n;
+  vll a(n);
+  vll b(n);
+  rep(i, n) cin >> a[i];
+  rep(i, n) cin >> b[i];
+  ll sumLess = 0;
+  int ans = 0;
+  rep(i, n) {
+    if (b[i] > a[i])
+      ans++;
+    sumLess += max(0ll, b[i] - a[i]);
   }
-  cout << cnt << nl;
+  vll d(n);
+  rep(i, n) d[i] = max(0ll, a[i] - b[i]);
+  sort(d.rbegin(), d.rend());
+  ll sumPlus = 0;
+  rep(i, n) {
+    if (sumPlus >= sumLess)
+      break;
+    sumPlus += d[i];
+    ans++;
+  }
+  if (sumPlus < sumLess)
+    ans = -1;
+  cout << ans << endl;
   return 0;
 }
