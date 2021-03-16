@@ -60,39 +60,20 @@ int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
 
-ll f(int k) {
-  ll c = k;
-  ll ret = 0;
-  ll dig = 1;
-  while (k) {
-    ret += dig * (k % 10);
-    k /= 10;
-    dig *= c;
-  }
-  return ret;
-}
-
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  ll a;
-  cin >> a;
-  ll lo = 9;
-  ll hi = 1e4 + 1;
-  rep(i, 25) {
-    int mid = (lo + hi) / 2;
-    ll now = f(mid);
-    if (now == a) {
-      cout << mid << nl;
-      return 0;
-    }
-    if (now > a) {
-      hi = mid;
+  string s;
+  cin >> s;
+  int n = s.size();
+  ll ans = 0;
+  rep(i, n) {
+    if (s[i] == 'U') {
+      ans += n - 1 - i + i * 2;
     } else {
-      lo = mid;
+      ans += i + (n - 1 - i) * 2;
     }
   }
-
-  cout << -1 << nl;
+  cout << ans << nl;
   return 0;
 }
