@@ -66,62 +66,27 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-vi cnt[100004];
-struct UnionFind {
-  vector<int> d;
-  UnionFind(int n = 0) : d(n, -1) {}
-  int find(int x) {
-    if (d[x] < 0)
-      return x;
-    return d[x] = find(d[x]);
-  }
-  bool unite(int x, int y) {
-    x = find(x);
-    y = find(y);
-    if (x == y)
-      return false;
-    if (d[x] > d[y])
-      swap(x, y);
-    d[x] += d[y];
-    d[y] = x;
-    return true;
-  }
-  bool same(int x, int y) { return find(x) == find(y); }
-  int size(int x) { return -d[find(x)]; }
-  int numSets() {
-    int c = 0;
-    for (int num : d)
-      if (num < 0)
-        c++;
-    return c;
-  }
-};
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n, m;
-  cin >> n >> m;
-  rep(i, n) {
-    int k;
-    cin >> k;
-    rep(j, k) {
-      int l;
-      cin >> l;
-      l--;
-      cnt[l].pb(i);
+  int n, k;
+  cin >> n >> k;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  priority_queue<ii> q;
+  rep(i, k) { q.emplace(a[i], i + 1); }
+  cout << q.top().se << nl;
+  rep2(i, k, n - 1) {
+    auto [num, id] = q.top();
+    q.pop();
+    int now = a[i];
+    if (num > now) {
+      q.emplace(now, i + 1);
+    } else {
+      q.emplace(num, id);
     }
-  }
-  UnionFind uf(n);
-  rep(i, m) {
-    if (!cnt[i].size())
-      continue;
-    int p = cnt[i][0];
-    rep2(j, 1, cnt[i].size() - 1) { uf.unite(p, cnt[i][j]); }
-  }
-  if (uf.size(0) == n) {
-    puts("YES");
-  } else {
-    puts("NO");
+    cout << q.top().se << nl;
   }
   return 0;
 }

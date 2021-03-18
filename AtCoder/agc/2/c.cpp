@@ -66,62 +66,27 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-vi cnt[100004];
-struct UnionFind {
-  vector<int> d;
-  UnionFind(int n = 0) : d(n, -1) {}
-  int find(int x) {
-    if (d[x] < 0)
-      return x;
-    return d[x] = find(d[x]);
-  }
-  bool unite(int x, int y) {
-    x = find(x);
-    y = find(y);
-    if (x == y)
-      return false;
-    if (d[x] > d[y])
-      swap(x, y);
-    d[x] += d[y];
-    d[y] = x;
-    return true;
-  }
-  bool same(int x, int y) { return find(x) == find(y); }
-  int size(int x) { return -d[find(x)]; }
-  int numSets() {
-    int c = 0;
-    for (int num : d)
-      if (num < 0)
-        c++;
-    return c;
-  }
-};
+
+ll N, L;
+ll a[100005];
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n, m;
-  cin >> n >> m;
-  rep(i, n) {
-    int k;
-    cin >> k;
-    rep(j, k) {
-      int l;
-      cin >> l;
-      l--;
-      cnt[l].pb(i);
-    }
+  cin >> N >> L;
+  rep(i, N) cin >> a[i];
+  int last = -1;
+  rep(i, N - 1) if (a[i] + a[i + 1] >= L) last = i;
+  if (last == -1) {
+    puts("Impossible");
+    return 0;
   }
-  UnionFind uf(n);
-  rep(i, m) {
-    if (!cnt[i].size())
-      continue;
-    int p = cnt[i][0];
-    rep2(j, 1, cnt[i].size() - 1) { uf.unite(p, cnt[i][j]); }
+  cout << "Possible" << nl;
+  rep(i, N - 1) {
+    if (i == last)
+      break;
+    cout << i + 1 << nl;
   }
-  if (uf.size(0) == n) {
-    puts("YES");
-  } else {
-    puts("NO");
-  }
+  rep3(i, N - 2, last) cout << i + 1 << nl;
   return 0;
 }

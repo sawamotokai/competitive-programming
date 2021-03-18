@@ -66,62 +66,60 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
-vi cnt[100004];
-struct UnionFind {
-  vector<int> d;
-  UnionFind(int n = 0) : d(n, -1) {}
-  int find(int x) {
-    if (d[x] < 0)
-      return x;
-    return d[x] = find(d[x]);
-  }
-  bool unite(int x, int y) {
-    x = find(x);
-    y = find(y);
-    if (x == y)
-      return false;
-    if (d[x] > d[y])
-      swap(x, y);
-    d[x] += d[y];
-    d[y] = x;
-    return true;
-  }
-  bool same(int x, int y) { return find(x) == find(y); }
-  int size(int x) { return -d[find(x)]; }
-  int numSets() {
-    int c = 0;
-    for (int num : d)
-      if (num < 0)
-        c++;
-    return c;
-  }
-};
+vi to[10005];
+int deg[10005];
+int used[10005];
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  int n, m;
-  cin >> n >> m;
+  int n;
+  cin >> n;
+  rep(i, n - 1) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
+    deg[a]++;
+    deg[b]++;
+  }
+  vi c(n);
+  rep(i, n) cin >> c[i];
+  priority_queue<int, vi, greater<int>> pq;
+  rep(i, n) pq.push(c[i]);
+  queue<int> leaves;
+  vi ans(n);
   rep(i, n) {
-    int k;
-    cin >> k;
-    rep(j, k) {
-      int l;
-      cin >> l;
-      l--;
-      cnt[l].pb(i);
+    if (deg[i] == 1) {
+      leaves.push(i);
+      used[i] = 1;
+      ans[i] = pq.top();
+      pq.pop();
     }
   }
-  UnionFind uf(n);
-  rep(i, m) {
-    if (!cnt[i].size())
-      continue;
-    int p = cnt[i][0];
-    rep2(j, 1, cnt[i].size() - 1) { uf.unite(p, cnt[i][j]); }
+  ll m = 0;
+  while (leaves.size()) {
+    int v = leaves.front();
+    leaves.pop();
+    for (int u : to[v]) {
+      if (used[u])
+        continue;
+      ans[u] = pq.top();
+      pq.pop();
+      deg[u]--;
+      if (deg[u] == 1) {
+        leaves.push(u);
+        used[u] = 1;
+      }
+    }
   }
-  if (uf.size(0) == n) {
-    puts("YES");
-  } else {
-    puts("NO");
+  rep(i, n) {
+    for (int u : to[i]) {
+      m += min<ll>(ans[i], ans[u]);
+    }
   }
+  cout << m / 2 << nl;
+  priv(ans);
   return 0;
 }
