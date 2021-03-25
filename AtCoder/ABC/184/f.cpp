@@ -50,8 +50,42 @@ int main() {
   cin >> n >> t;
   vector<int> a(n);
   rep(i, n) cin >> a[i];
-  rep(i, n) {
-    rep(j, t) { if () }
+  vector<ll> b;
+  vector<ll> c;
+  int m = n / 2;
+  int r = n - m;
+  rep(i, 1 << m) {
+    ll sum = 0;
+    rep(j, m) {
+      if ((i >> j) & 1) {
+        sum += a[j];
+      }
+    }
+    b.pb(sum);
   }
+  rep(i, 1 << r) {
+    ll sum = 0;
+    rep(j, r) {
+      if ((i >> j) & 1) {
+        sum += a[j + m];
+      }
+    }
+    c.pb(sum);
+  }
+  sort(all(b));
+  sort(all(c));
+  ll ans = 0;
+  for (ll num : b) {
+    ll s = t - num;
+    auto it = lower_bound(all(c), s);
+    if (*it != s) {
+      if (it != c.begin())
+        it--;
+      else
+        continue;
+    }
+    chmax(ans, *it + num);
+  }
+  cout << ans << endl;
   return 0;
 }

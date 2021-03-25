@@ -70,24 +70,36 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+void solve() {
+  string a, b;
+  cin >> a >> b;
+  if (a.size() > b.size())
+    swap(a, b);
+  int n = a.size();
+  int leng = 0;
+  rep(l, n) {
+    rep2(r, l, n - 1) {
+      string aa = a.substr(l, r - l + 1);
+      int sublen = aa.size();
+      rep(i, b.size()) {
+        if (i + sublen > n + 1)
+          break;
+        string now = b.substr(i, sublen);
+        if (b.substr(i, sublen) == aa)
+          chmax(leng, sublen);
+      }
+    }
+  }
+  cout << a.size() + b.size() - 2 * leng << nl;
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  int n, m;
-  cin >> n >> m;
-  vii p(n);
-  vii c(m);
-  rep(i, n) cin >> p[i].fi >> p[i].se;
-  rep(i, m) cin >> c[i].fi >> c[i].se;
-  rep(i, n) {
-    int cp = 0;
-    int mn = INF;
-    rep(j, m) {
-      if (chmin(mn, abs(p[i].fi - c[j].fi) + abs(p[i].se - c[j].se)))
-        cp = j;
-    }
-    cout << cp + 1 << nl;
-  }
+  int t;
+  cin >> t;
+  while (t--)
+    solve();
   return 0;
 }

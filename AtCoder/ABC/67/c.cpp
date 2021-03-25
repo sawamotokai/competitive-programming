@@ -59,35 +59,29 @@ inline void priv(vi a) {
   rep(i, (int)a.size())
       printf("%d%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
 }
-const ll LINF = 8e18L + 1;
-const int INF = 8e9 + 1;
+const ll LINF = 1e18L + 1;
+const int INF = 1e9 + 1;
 int dx[] = {0, 1, 0, -1};
 int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
-// g++ -std=c++17 -stdlib=libc++
-#define _GLIBCXX_DEBUG
-// This slows down the execution; even the time complexity, since it checks if
-// std funcs such as lower_bound meets prereqs
+// clang++ -std=c++11 -stdlib=libc++
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  cout << fixed << setprecision(16);
-  int n, m;
-  cin >> n >> m;
-  vii p(n);
-  vii c(m);
-  rep(i, n) cin >> p[i].fi >> p[i].se;
-  rep(i, m) cin >> c[i].fi >> c[i].se;
-  rep(i, n) {
-    int cp = 0;
-    int mn = INF;
-    rep(j, m) {
-      if (chmin(mn, abs(p[i].fi - c[j].fi) + abs(p[i].se - c[j].se)))
-        cp = j;
-    }
-    cout << cp + 1 << nl;
+  int n;
+  cin >> n;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  vll SS(n + 1);
+  rep(i, n) SS[i + 1] += SS[i] + a[i];
+  ll ans = LINF;
+  rep(i, n - 1) {
+    ll a = SS[i + 1];
+    ll b = SS[n] - SS[i + 1];
+    chmin(ans, abs(a - b));
   }
+  cout << ans << nl;
   return 0;
 }

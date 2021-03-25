@@ -55,39 +55,60 @@ template <class T> void print(const initializer_list<T> &il) {
   }
   cout << "\n";
 }
-inline void priv(vi a) {
+inline void priv(vll a) {
   rep(i, (int)a.size())
-      printf("%d%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
+      printf("%lld%c", a[i], i == (int)a.size() - 1 ? '\n' : ' ');
 }
-const ll LINF = 8e18L + 1;
-const int INF = 8e9 + 1;
+const ll LINF = 1e18L + 1;
+const int INF = 1e9 + 1;
 int dx[] = {0, 1, 0, -1};
 int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
-// g++ -std=c++17 -stdlib=libc++
-#define _GLIBCXX_DEBUG
-// This slows down the execution; even the time complexity, since it checks if
-// std funcs such as lower_bound meets prereqs
+// clang++ -std=c++11 -stdlib=libc++
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
-  cout << fixed << setprecision(16);
-  int n, m;
-  cin >> n >> m;
-  vii p(n);
-  vii c(m);
-  rep(i, n) cin >> p[i].fi >> p[i].se;
-  rep(i, m) cin >> c[i].fi >> c[i].se;
-  rep(i, n) {
-    int cp = 0;
-    int mn = INF;
-    rep(j, m) {
-      if (chmin(mn, abs(p[i].fi - c[j].fi) + abs(p[i].se - c[j].se)))
-        cp = j;
+  int n;
+  cin >> n;
+  vvll c(n, vll(n));
+  rep(i, n) { rep(j, n) cin >> c[i][j]; }
+  vll a(n);
+  vll b(n);
+
+  ll mn = LINF;
+  rep(j, n) chmin(mn, c[0][j]);
+  rep(j, n) b[j] = c[0][j] - mn;
+  rep2(i, 1, n - 1) {
+    ll nowmn = LINF;
+    rep(j, n) chmin(nowmn, c[i][j]);
+    rep(j, n) {
+      if (b[j] != c[i][j] - nowmn) {
+        puts("No");
+        return 0;
+      }
     }
-    cout << cp + 1 << nl;
   }
+
+  mn = LINF;
+  rep(i, n) chmin(mn, c[i][0]);
+  rep(i, n) a[i] = c[i][0] - mn;
+  rep2(i, 1, n - 1) {
+    ll nowmn = LINF;
+    rep(j, n) chmin(nowmn, c[j][i]);
+    rep(j, n) {
+      if (a[j] != c[j][i] - nowmn) {
+        puts("No");
+        return 0;
+      }
+    }
+  }
+
+  ll d = c[0][0] - b[0] - a[0];
+  rep(i, n) b[i] += d;
+  printf("Yes\n");
+  priv(a);
+  priv(b);
   return 0;
 }

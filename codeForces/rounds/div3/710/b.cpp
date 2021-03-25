@@ -70,24 +70,56 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+void solve() {
+  ll n, k;
+  string s;
+  cin >> n >> k >> s;
+  int first = -1;
+  rep(i, n) {
+    if (s[i] == '*') {
+      first = i;
+      break;
+    }
+  }
+  if (first == -1) {
+    cout << 0 << nl;
+    return;
+  }
+  int last = -1;
+  rep3(i, n - 1, first + 1) {
+    if (s[i] == '*') {
+      last = i;
+      break;
+    }
+  }
+  queue<int> q;
+  q.push(first);
+  int ans = 0;
+  int changedLast = 0;
+  while (q.size()) {
+    auto i = q.front();
+    q.pop();
+    ans++;
+    rep3(j, min(i + k, n - 1), i + 1) {
+      if (s[j] == '*') {
+        q.push(j);
+        if (j == last)
+          changedLast = 1;
+        break;
+      }
+    }
+  }
+  ans += (last != -1) and (!changedLast);
+  cout << ans << nl;
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  int n, m;
-  cin >> n >> m;
-  vii p(n);
-  vii c(m);
-  rep(i, n) cin >> p[i].fi >> p[i].se;
-  rep(i, m) cin >> c[i].fi >> c[i].se;
-  rep(i, n) {
-    int cp = 0;
-    int mn = INF;
-    rep(j, m) {
-      if (chmin(mn, abs(p[i].fi - c[j].fi) + abs(p[i].se - c[j].se)))
-        cp = j;
-    }
-    cout << cp + 1 << nl;
-  }
+  int t;
+  cin >> t;
+  while (t--)
+    solve();
   return 0;
 }
