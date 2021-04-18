@@ -44,77 +44,66 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // clang++ -std=c++11 -stdlib=libc++
+//
+vi to[200005];
+int d[200005];
+ll ans[200005];
 
-int N;
-vector<int> to[200005];
-ll W[200005];
-ll pena[200005];
-ll dp[200005];
-
-// ll rec(int v, int from = -1) {
-//   if (dp[v] != -INF)
-//     return dp[v];
-//   ll now = W[v];
-//   for (int u : to[v]) {
-//     // if (u == from)
-//     //   continue;
-//     if (W[u] <= 0)
-//       continue;
-//     now += rec(u, v);
-//   }
-//   return dp[v] = now;
-// }
-
-ll dfs(int v, int root = -1) {
-  ll now = W[v] + pena[v];
+void add(int v, int from = -1) {
   for (int u : to[v]) {
-    if (root == u)
+    if (u == from)
       continue;
-    if (dp[u] != -INF)
-      now += dp[u];
-    else
-      now += dfs(u, v);
+    ans[u] += ans[v];
+    add(u, v);
   }
-  if (root == -1)
-    dp[v] = now;
-  return now;
+}
+void dfs(int v, int from = -1) {
+  for (int u : to[v]) {
+    if (u == from)
+      continue;
+    chmin(d[u], d[v] + 1);
+    dfs(u, v);
+  }
 }
 
 int main() {
-  cin >> N;
-  vi A(N);
-  vi B(N);
-  rep(i, 2e5 + 3) dp[i] = -INF;
-  rep(i, N - 1) {
-    int a, b;
-    cin >> a >> b;
-    a--;
-    b--;
-    to[a].push_back(b);
-    to[b].push_back(a);
-    A[i] = a;
-    B[i] = b;
+  int n;
+  cin >> n;
+  rep(i, n) d[i] = INF;
+  d[0] = 0;
+  vi a(n - 1);
+  vi b(n - 1);
+  rep(i, n - 1) {
+    cin >> a[i] >> b[i];
+    a[i]--;
+    b[i]--;
+    to[a[i]].pb(b[i]);
+    to[b[i]].pb(a[i]);
   }
-  int Q;
-  cin >> Q;
-  while (Q--) {
-    ll t, e, x;
-    cin >> t >> e >> x;
-    e--;
-    ll a = A[e];
-    ll b = B[e];
+  dfs(0);
+  int q;
+  cin >> q;
+  while (q--) {
+    int t, i, x;
+    cin >> t >> i >> x;
+    i--;
+    int avoid;
+    int v;
     if (t == 1) {
-      W[a] += x;
-      // W[b] -= x;
-      pena[b] -= x;
+      avoid = b[i];
+      v = a[i];
     } else {
-      // W[a] -= x;
-      pena[a] -= x;
-      W[b] += x;
+      avoid = a[i];
+      v = b[i];
+    }
+    if (d[avoid] < d[v]) {
+      ans[v] += x;
+    } else {
+      ans[0] += x;
+      ans[avoid] -= x;
     }
   }
-  rep(i, N) dfs(i);
-  rep(i, N) cout << dp[i] << endl;
-  // rep(i, N) cout << W[i] << endl;
+  add(0);
+  rep(i, n) cout << ans[i] << '\n';
   return 0;
 }
