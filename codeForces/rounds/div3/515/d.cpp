@@ -78,48 +78,36 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
+  int n, m, k;
+  cin >> n >> m >> k;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  int lo = 0;
+  int hi = n + 1;
+
+  auto f = [&](int num) {
+    int first = n - num;
+    ll now = 0;
+    int used = 1;
+    rep2(i, first, n - 1) {
+      if (now + a[i] <= k)
+        now += a[i];
+      else {
+        used++;
+        now = a[i];
       }
-      assert(add == 0);
-      ans = now;
-      return true;
     }
-    return false;
+    if (used > m)
+      return false;
+    return true;
   };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
+  while (lo + 1 < hi) {
+    int mid = lo + hi >> 1;
+    if (f(mid))
+      lo = mid;
     else
-      lo = x;
+      hi = mid;
   }
-  priv(ans);
+  cout << lo << nl;
   return 0;
 }

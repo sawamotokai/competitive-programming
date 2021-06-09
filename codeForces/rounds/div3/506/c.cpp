@@ -78,48 +78,29 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  cin >> n;
+  vi imos(300005);
+  vi l(300005);
+  vi r(300005);
+  rep(i, n) { cin >> l[i] >> r[i]; }
+  map<int, int> mp;
+  int id = 0;
+  set<int> st;
+  rep(i, n) {
+    st.insert(l[i]);
+    st.insert(r[i]);
   }
-  priv(ans);
+  for (int nn : st) {
+    mp[nn] = id;
+    id++;
+  }
+  rep(i, n) {
+    imos[mp[l[i]]]++;
+    imos[mp[r[i]] + 1]--;
+  }
+  rep(i, 300003) imos[i + 1] += imos[i];
+  int ans = 0;
+  rep(i, 300005) { chmax(ans) }
   return 0;
 }

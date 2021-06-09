@@ -78,48 +78,43 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
+  int n;
+  cin >> n;
+  int L = 0;
+  int R = 0;
+  vi cntL(n);
+  vi cntR(n);
+  map<int, int> time;
+  map<int, char> RorL;
+
+  rep(i, n) {
+    char c;
+    cin >> c;
+    int d;
+    cin >> d;
+    if (c == 'R') {
+      RorL[d] = 'R';
+      R++;
+      time[d] = i;
     }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
+    if (c == 'L') {
+      RorL[d] = 'L';
+      L++;
+      time[d] = i;
+    }
+    if (c == '?') {
+      int ans;
+      if (RorL[d] == 'R') {
+        int x = R - cntR[time[d]];
+        ans = min(x, R + L - x - 1);
+      } else {
+        int x = L - cntL[time[d]];
+        ans = min(x, R + L - x - 1);
       }
-      assert(add == 0);
-      ans = now;
-      return true;
+      cout << ans << nl;
     }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+    cntL[i] = L;
+    cntR[i] = R;
   }
-  priv(ans);
   return 0;
 }

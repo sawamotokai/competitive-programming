@@ -73,53 +73,44 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
+vi to[2005];
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n, m;
+  cin >> n >> m;
+  rep(i, m) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
   }
-  priv(ans);
+  int ans = 0;
+  auto f = [&](int v) {
+    vi vis(n);
+    vis[v] = 1;
+    queue<int> q;
+    q.push(v);
+    while (q.size()) {
+      int u = q.front();
+      q.pop();
+      for (int nx : to[u]) {
+        if (vis[nx])
+          continue;
+        q.push(nx);
+      }
+      vis[u] = true;
+    }
+    rep(i, n) {
+      if (vis[i])
+        ans++;
+    }
+  };
+  rep(i, n) { f(i); }
+  cout << ans << nl;
+
   return 0;
 }

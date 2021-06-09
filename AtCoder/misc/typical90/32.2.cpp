@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <cassert>
 #define rep(i, N) for (int i = 0; i < (N); ++i)
@@ -38,7 +39,7 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
@@ -73,53 +74,41 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
+int no[12][12];
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  cin >> n;
+  vvi a(n, vi(n));
+  rep(i, n) rep(j, n) cin >> a[i][j];
+  int m;
+  cin >> m;
+
+  rep(i, m) {
+    int x, y;
+    cin >> x >> y;
+    x--;
+    y--;
+    no[x][y] = true;
+    no[y][x] = true;
   }
-  priv(ans);
+
+  vi perm(n);
+  rep(i, n) perm[i] = i;
+  int ans = INF;
+  do {
+    [&] {
+      rep(i, n - 1) if (no[perm[i]][perm[i + 1]]) return;
+      int now = 0;
+      rep(i, n) now += a[perm[i]][i];
+      chmin(ans, now);
+    }();
+  } while (next_permutation(all(perm)));
+  if (ans == INF)
+    ans = -1;
+  cout << ans << nl;
   return 0;
 }

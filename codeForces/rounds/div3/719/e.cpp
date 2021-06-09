@@ -74,52 +74,57 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+void solve() {
+  int n;
+  cin >> n;
+  string s;
+  cin >> s;
+  int lx = 0;
+  int rx = 0;
+  ll sum = 0;
+  int st = -1;
+  rep(i, n) {
+    if (s[i] == '*') {
+      if (st == -1)
+        st = i;
+      rx++;
+    }
+  }
+  lx++;
+  rx--;
+  int sp = 0;
+  rep2(i, st + 1, n - 1) {
+    if (s[i] == '.')
+      sp++;
+    if (s[i] == '*') {
+      sum += sp;
+    }
+  }
+  ll ans = sum;
+  sp = 0;
+  rep2(i, st + 1, n - 1) {
+    if (s[i] == '.') {
+      sp++;
+    } else {
+      sum -= sp * rx;
+      sum += sp * lx;
+      lx++;
+      rx--;
+      // print({lx, rx, (int)sum});
+      sp = 0;
+      chmin(ans, sum);
+    }
+  }
+  cout << ans << nl;
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
-  }
-  priv(ans);
+  int t;
+  cin >> t;
+  while (t--)
+    solve();
   return 0;
 }

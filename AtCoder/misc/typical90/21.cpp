@@ -38,11 +38,11 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
-  scanf("%lld", &x);
+  cin >> x;
   return x;
 }
 template <class T> void takeUnique(vector<T> &v) {
@@ -73,53 +73,77 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
+vi to[100005];
+vi rev[100005];
+int V[100005];
+int vis[100005];
+int N, M;
+int id = 0;
+ll ans = 0;
+ll num = 1;
+
+void dfs(int v, int from = -1) {
+  for (int u : to[v]) {
+    if (vis[u])
+      continue;
+    vis[u] = 1;
+    dfs(u, v);
+  }
+  V[v] = id;
+  id++;
+}
+
+void dfs2(int v) {
+  num++;
+  // print({v, (int)num});
+  for (int u : rev[v]) {
+    if (vis[u])
+      continue;
+    vis[u] = 1;
+    dfs2(u);
+  }
+}
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  memset(V, -1, sizeof(V));
+  cin >> N >> M;
+  rep(i, M) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    rev[b].push_back(a);
   }
-  priv(ans);
+  rep(i, N) {
+    if (vis[i])
+      continue;
+    vis[i] = 1;
+    dfs(i);
+  }
+
+  priority_queue<P> pq;
+  rep(i, N) { pq.emplace(V[i], i); }
+
+  memset(vis, 0, sizeof(vis));
+  while (pq.size()) {
+    auto [idx, i] = pq.top();
+    pq.pop();
+    if (vis[i])
+      continue;
+    vis[i] = 1;
+    num = 1;
+    for (int u : rev[i]) {
+      if (vis[u])
+        continue;
+      vis[u] = 1;
+      dfs2(u);
+    }
+    ans += num * (num - 1) / 2;
+  }
+  cout << ans << nl;
   return 0;
 }

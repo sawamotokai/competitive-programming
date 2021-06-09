@@ -70,56 +70,52 @@ int dy[] = {1, 0, -1, 0};
 int dxx[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // g++ -std=c++17 -stdlib=libc++
-#define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
+int flag[51][2501];
+int grundy[51][2501];
+
+int rec(int w, int b) {
+  if (flag[w][b])
+    return grundy[w][b];
+  flag[w][b] = 1;
+  set<int> st;
+  rep2(i, 1, b / 2) {
+    if (b - i >= 0)
+      st.insert(rec(w, b - i));
+  }
+  if (w)
+    st.insert(rec(w - 1, b + w));
+  int nx = 0;
+  int ret = 0;
+  for (int num : st) {
+    if (nx != num) {
+      break;
+    }
+    nx++;
+  }
+  ret = nx;
+  return grundy[w][b] = ret;
+}
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  cin >> n;
+  vi W(n);
+  vi B(n);
+  rep(i, n) cin >> W[i];
+  rep(i, n) cin >> B[i];
+  flag[0][0] = 1;
+  flag[0][1] = 1;
+  int ans = 0;
+  rep(i, n) { ans ^= rec(W[i], B[i]); }
+  if (ans) {
+    cout << "First" << nl;
+  } else {
+    cout << "Second" << nl;
   }
-  priv(ans);
   return 0;
 }

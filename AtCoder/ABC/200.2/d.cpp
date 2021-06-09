@@ -78,48 +78,34 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
+  int n;
+  cin >> n;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  int mod = 200;
+  vvi st(200);
+  int len = min(9, n);
+  rep(i, 1 << len) {
+    int sum = 0;
+    vi now;
+    rep(j, len) {
+      if ((i >> j) & 1) {
+        sum += a[j];
+        sum %= mod;
+        now.pb(j + 1);
       }
-      assert(add == 0);
-      ans = now;
-      return true;
     }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+    if (st[sum].size()) {
+      cout << "Yes" << nl;
+      cout << st[sum].size() << " ";
+      priv(st[sum]);
+      cout << now.size() << " ";
+      priv(now);
+      return 0;
+    } else {
+      st[sum] = now;
+    }
   }
-  priv(ans);
+  cout << "No" << nl;
   return 0;
 }

@@ -73,53 +73,72 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
+//
+int dp[2005][2005];
+int flag[2005][2005];
+string grid[2005];
+int H, W;
+int rec(int h, int w) {
+  if (flag[h][w]) {
+    return dp[h][w];
+  }
+  flag[h][w] = 1;
+  int now = 0;
+  if ((h + w) & 1) {
+    // aoki is moving
+    if (h + 1 < H) {
+      now = rec(h + 1, w);
+      if (grid[h + 1][w] == '+')
+        now--;
+      else
+        now++;
+    }
+    if (w + 1 < W) {
+      int now2 = rec(h, w + 1);
+      if (grid[h][w + 1] == '+')
+        now2--;
+      else
+        now2++;
+      chmin(now, now2);
+    }
+  } else {
+    // takahashi
+    if (h + 1 < H) {
+      now = rec(h + 1, w);
+      if (grid[h + 1][w] == '+')
+        now++;
+      else
+        now--;
+    }
+    if (w + 1 < W) {
+      int now2 = rec(h, w + 1);
+      if (grid[h][w + 1] == '+')
+        now2++;
+      else
+        now2--;
+      chmax(now, now2);
+    }
+  }
+  return dp[h][w] = now;
+}
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  cin >> H >> W;
+  rep(i, H) cin >> grid[i];
+  int res = rec(0, 0);
+  string ans;
+  if (res > 0) {
+    ans = "Takahashi";
   }
-  priv(ans);
+  if (res < 0) {
+    ans = "Aoki";
+  }
+  if (res == 0) {
+    ans = "Draw";
+  }
+  cout << ans << nl;
   return 0;
 }

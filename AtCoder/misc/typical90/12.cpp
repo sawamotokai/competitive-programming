@@ -38,7 +38,7 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
@@ -74,52 +74,78 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+struct UnionFind {
+  vector<int> d;
+  UnionFind(int n = 0) : d(n, -1) {}
+  int find(int x) {
+    if (d[x] < 0)
+      return x;
+    return d[x] = find(d[x]);
+  }
+  bool unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x == y)
+      return false;
+    if (d[x] > d[y])
+      swap(x, y);
+    d[x] += d[y];
+    d[y] = x;
+    return true;
+  }
+  bool same(int x, int y) { return find(x) == find(y); }
+  int size(int x) { return -d[find(x)]; }
+  int numSets() {
+    int c = 0;
+    for (int num : d)
+      if (num < 0)
+        c++;
+    return c;
+  }
+};
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
+  int h, w;
+  cin >> h >> w;
+  vector<vector<char>> grid(h, vector<char>(w));
+  int q;
+  cin >> q;
+  auto f = [&](int y, int x) { return x + y * w; };
+  UnionFind uf(h * w);
+  while (q--) {
+    int t;
+    cin >> t;
+    if (t == 1) {
+      int r, c;
+      cin >> r >> c;
+      r--;
+      c--;
+      grid[r][c] = '#';
+      rep(i, 4) {
+        int nr = r + dy[i];
+        int nc = c + dx[i];
+        if (nr < 0 or nr >= h or nc < 0 or nc >= w)
+          continue;
+        if (grid[nr][nc] == '#')
+          uf.unite(f(nr, nc), f(r, c));
       }
-      assert(add == 0);
-      ans = now;
-      return true;
+    } else {
+      int ra, ca, rb, cb;
+      cin >> ra >> ca >> rb >> cb;
+      ra--;
+      ca--;
+      rb--;
+      cb--;
+      if (grid[ra][ca] == '#' and grid[rb][cb] == '#' and
+          uf.same(f(ra, ca), f(rb, cb))) {
+        cout << "Yes" << nl;
+      } else {
+        cout << "No" << nl;
+      }
     }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
   }
-  priv(ans);
   return 0;
 }

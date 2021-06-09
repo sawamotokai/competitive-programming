@@ -73,53 +73,53 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
-
+struct edge {
+  int v;
+  int c;
+  edge(int v, int c) : v(v), c(c){};
+};
+vector<edge> to[100005];
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n, m;
+  cin >> n >> m;
+  rep(i, m) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    a--;
+    b--;
+    to[a].emplace_back(b, c);
+    to[b].emplace_back(a, c);
   }
-  priv(ans);
+  vi dist(n, INF);
+  dist[0] = 0;
+  minq<P> pq;
+  pq.emplace(0, 0);
+  while (pq.size()) {
+    int d = pq.top().fi;
+    int v = pq.top().se;
+    pq.pop();
+    for (edge e : to[v]) {
+      if (chmin(dist[e.v], dist[v] + e.c)) {
+        pq.emplace(dist[e.v], e.v);
+      }
+    }
+  }
+  vi dist2(n, INF);
+  dist2[n - 1] = 0;
+  pq.emplace(0, n - 1);
+  while (pq.size()) {
+    int d = pq.top().fi;
+    int v = pq.top().se;
+    pq.pop();
+    for (edge e : to[v]) {
+      if (chmin(dist2[e.v], dist2[v] + e.c)) {
+        pq.emplace(dist2[e.v], e.v);
+      }
+    }
+  }
+  rep(k, n) { cout << dist[k] + dist2[k] << nl; }
   return 0;
 }

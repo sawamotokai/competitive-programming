@@ -78,48 +78,24 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
+  int n;
+  cin >> n;
+  vi a(n);
+  rep(i, n) cin >> a[i];
+  vll ss1(n + 1);
+  vll ss2(n + 1);
+  rep(i, n) ss1[i + 1] += ss1[i] + a[i];
+  rep(i, n) ss2[n - i - 1] += ss2[n - i] + a[n - i - 1];
+  reverse(all(ss2));
+  ll ans = 0;
+  rep(i, n) {
+    ll L = ss1[i + 1];
+    auto it = lower_bound(ss2.begin(), ss2.begin() + n - i - 1, L);
+    ll R = *it;
+    if (L == R) {
+      chmax(ans, L);
     }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
   }
-  priv(ans);
+  cout << ans << nl;
   return 0;
 }

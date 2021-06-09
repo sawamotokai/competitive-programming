@@ -78,48 +78,37 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  cin >> n;
+  set<ll> st;
+  map<int, int> mp;
+  vi a(n);
+  rep(I, n) cin >> a[I];
+  rep(i, n) {
+    st.insert(a[i]);
+    mp[a[i]]++;
   }
-  priv(ans);
+  int ans = 0;
+  rep(i, n) {
+    int ok = 0;
+    rep(s, 36) {
+      ll bit = 1LL << s;
+      if (st.count(bit - a[i])) {
+        if (bit - a[i] == a[i]) {
+          if (mp[a[i]] >= 2) {
+            ok = 1;
+            break;
+          }
+        } else {
+          ok = 1;
+          break;
+        }
+      }
+    }
+    if (!ok) {
+      ans++;
+    }
+  }
+  cout << ans << nl;
   return 0;
 }

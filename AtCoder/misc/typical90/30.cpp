@@ -38,7 +38,7 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
@@ -78,48 +78,21 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
+  int n, k;
+  cin >> n >> k;
+  vi sieve(1e7 + 1);
+  rep2(i, 2, n) {
+    if (sieve[i] != 0)
+      continue;
+    for (int j = i; j <= n; j += i) {
+      sieve[j]++;
     }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
   }
-  priv(ans);
+  int ans = 0;
+  rep2(i, 2, n) {
+    if (sieve[i] >= k)
+      ans++;
+  }
+  cout << ans << nl;
   return 0;
 }

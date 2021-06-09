@@ -74,52 +74,59 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+int mod = 998244353;
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
+  int h, w;
+  cin >> h >> w;
+  vs grid(h);
+  rep(i, h) cin >> grid[i];
+  ll ans = 1;
+  rep2(k, 0, h + w - 2) {
+    int now = 0;
+    bool mul = 0;
+    [&] {
+      rep(i, h) {
+        if (i > k)
           break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
+        rep(j, w) {
+          if (j + i > k)
+            break;
+          if (i + j != k)
+            continue;
+          assert(i + j == k);
+          if (grid[i][j] == '.') {
+            mul = 1;
+            continue;
+          }
+          // R=1
+          // B=2
+          if (grid[i][j] == 'R') {
+            if (now == 2) {
+              ans = 0;
+              return;
+            } else
+              now = 1;
+          }
+          if (grid[i][j] == 'B') {
+            if (now == 1) {
+              ans = 0;
+              return;
+            } else
+              now = 2;
+          }
+        }
       }
-      assert(add == 0);
-      ans = now;
-      return true;
+    }();
+    if (mul) {
+      if (now == 0) {
+        ans *= 2;
+        ans %= mod;
+      }
     }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
   }
-  priv(ans);
+  cout << ans << nl;
   return 0;
 }

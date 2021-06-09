@@ -78,48 +78,49 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  string s, t;
+  cin >> n >> s >> t;
+  char now;
+  vi cs(2);
+  vi ct(2);
+  rep(i, n) {
+    cs[s[i] - '0']++;
+    ct[t[i] - '0']++;
   }
-  priv(ans);
+  if (cs[0] != ct[0] or cs[1] != ct[1]) {
+    cout << -1 << nl;
+    return 0;
+  }
+  int ans = 0;
+  queue<int> next1;
+  queue<int> next0;
+  rep(i, n) {
+    if (s[i] == '0')
+      next0.push(i);
+    else
+      next1.push(i);
+  }
+  rep(i, n) {
+    if (s[i] != t[i]) {
+      if (s[i] == '1') {
+        int idx;
+        do {
+          idx = next0.front();
+          next0.pop();
+        } while (idx <= i);
+        swap(s[i], s[idx]);
+      } else {
+        int idx;
+        do {
+          idx = next1.front();
+          next1.pop();
+        } while (idx <= i);
+        swap(s[i], s[idx]);
+      }
+      ans++;
+    }
+  }
+  cout << ans << nl;
   return 0;
 }

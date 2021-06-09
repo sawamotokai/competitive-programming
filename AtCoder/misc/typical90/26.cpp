@@ -38,7 +38,7 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
@@ -73,53 +73,49 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 #define _GLIBCXX_DEBUG
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
-
+vi to[100005];
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n;
+  cin >> n;
+  rep(i, n - 1) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    to[a].push_back(b);
+    to[b].push_back(a);
   }
+  queue<int> q;
+  vi col(n, -1);
+  q.push(0);
+  col[0] = 0;
+  while (q.size()) {
+    int v = q.front();
+    q.pop();
+    for (int u : to[v]) {
+      if (col[u] != -1)
+        continue;
+      col[u] = col[v] ^ 1;
+      q.push(u);
+    }
+  }
+  vi ans;
+  rep(i, n) {
+    if (col[i] == col[0])
+      ans.pb(i + 1);
+  }
+  if (ans.size() < n / 2) {
+    ans = vi();
+    rep(i, n) {
+      if (col[i] != col[0])
+        ans.pb(i + 1);
+    }
+  }
+  while (ans.size() > n / 2)
+    ans.pop_back();
   priv(ans);
   return 0;
 }

@@ -38,7 +38,7 @@ using vii = vector<ii>;
 using vs = vector<string>;
 using P = pair<ll, ll>;
 using gt = greater<P>;
-template <class T> using minq = priority_queue<T, vector<T>, greater<T>>;
+using minq = priority_queue<P, vector<P>, gt>;
 using vP = vector<P>;
 inline ll in() {
   ll x;
@@ -74,52 +74,52 @@ int dyy[] = {1, 1, 0, -1, -1, -1, 0, 1};
 // This slows down the execution; even the time complexity, since it checks if
 // std funcs such as lower_bound meets prereqs
 
+int a[3005];
+int b[3005];
+int c[3005];
+int d[3005];
+int e[3005];
+int n;
+int used[3005];
+int perm[3];
+ll ans = 0;
+void dfs(int p = 0, int l = 0) {
+  if (p == 3 or l == n) {
+    ll as = 0;
+    ll bs = 0;
+    ll cs = 0;
+    ll ds = 0;
+    ll es = 0;
+    rep(i, 3) {
+      chmax<ll>(as, a[perm[i]]);
+      chmax<ll>(bs, b[perm[i]]);
+      chmax<ll>(cs, c[perm[i]]);
+      chmax<ll>(ds, d[perm[i]]);
+      chmax<ll>(es, e[perm[i]]);
+    }
+    ll now = min({as, bs, cs, ds, es});
+    chmax(ans, now);
+    return;
+  }
+  dfs(p, l + 1);
+
+  rep(i, n) {
+    if (used[i])
+      continue;
+    used[i] = 1;
+    perm[p] = i;
+    dfs(p + 1, l + 1);
+    used[i] = 0;
+  }
+}
+
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
-  }
-  priv(ans);
+  cin >> n;
+  rep(i, n) { cin >> a[i] >> b[i] >> c[i] >> d[i] >> e[i]; }
+  dfs();
+  cout << ans << nl;
   return 0;
 }

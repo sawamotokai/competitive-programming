@@ -78,48 +78,60 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(NULL);
   cout << fixed << setprecision(16);
-  ll k, n, m;
-  cin >> k >> n >> m;
-  vi a(k);
-  rep(i, k) cin >> a[i];
-  vi ans;
-  auto f = [&](double x) {
-    ll R = 0;
-    ll L = 0;
-    int add = m;
-    vi now(k);
-    rep(i, k) {
-      int r = (m * a[i] + x) / n;
-      int l = (m * a[i] - x + n - 1) / n;
-      R += r;
-      L += l;
-      now[i] = l;
-      add -= l;
-    }
-    if (R >= m * n and L <= m * n) {
-      rep(i, k) {
-        if (add == 0)
-          break;
-        int r = (m * a[i] + x) / n;
-        int l = (m * a[i] - x + n - 1) / n;
-        now[i] += min(add, r - l);
-        add -= min(add, r - l);
-      }
-      assert(add == 0);
-      ans = now;
-      return true;
-    }
-    return false;
-  };
-  double lo = 0;
-  double hi = 1e9;
-  rep(_, 50) {
-    double x = (lo + hi) / 2;
-    if (f(x))
-      hi = x;
-    else
-      lo = x;
+  int n, k;
+  cin >> n >> k;
+  vvll A(n, vll(n));
+  rep(i, n) { rep(j, n) cin >> A[i][j]; }
+  int t = n - k + 1;
+  int ans = INF;
+
+  multiset<int> st;
+  rep(r, k) {
+    rep(c, k) { st.insert(A[r][c]); }
   }
-  priv(ans);
+  auto md = st.begin();
+  advance(md, (k * k + 1) / 2 - 1);
+  chmin(ans, *md);
+  int pos = (k * k + 1) / 2 - 1;
+  rep(i, t - 1) {
+    rep(c, k) {
+      st.insert(A[i + k][c]);
+      if (A[i + k][c] > *md) {
+        md++;
+        pos++;
+      } else if (A[i + k][c] < *md) {
+        md--;
+        pos--;
+      } else {
+        if (pos > k * k / 2) {
+          md--;
+          pos--;
+        } else {
+          md++;
+          pos++;
+        }
+      }
+    }
+    rep(c, k) {
+      auto itr = st.find(A[i][c]);
+      if (itr != st.end()) {
+        st.erase(itr);
+      }
+    }
+
+    rep(j, t - 1) {
+      rep(r, k) {
+        auto itr = st.find(A[r][j]);
+        if (itr != st.end()) {
+          st.erase(itr);
+        }
+      }
+      rep(r, k) { st.insert(A[r][j + k]); }
+      md = st.begin();
+      advance(md, (k * k + 1) / 2 - 1);
+      chmin(ans, *md);
+    }
+  }
+  cout << ans << nl;
   return 0;
 }
